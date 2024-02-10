@@ -21,17 +21,18 @@ export const Navbar = () => {
             onClick={() => router.push("/")}
           >
             <Image
-              src="/images/tsm-logo.png"
+              src="/images/tsm3.jpg"
               alt="TSM logo"
-              width="30"
-              height="30"
+              width={100}
+              height={30}
+              className="w-[30px] h-[30px]"
             />
             <div className="font-bold text-xl">Toxic Solo Merda</div>
           </div>
           <div className="flex gap-3 items-center">
             <div>
               <ThemeToggle />
-              <NavMenu />
+              {userId && <NavMenu />}
             </div>
             <UserButton afterSignOutUrl="/" />
             {!userId && (
