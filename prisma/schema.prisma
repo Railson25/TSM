@@ -13,13 +13,14 @@ datasource db {
 
 
 model Champion {
-  id String @id @default(cuid()) @map("_id")
+  id String @id @default(cuid()) 
+  userId String
   name String
-  winRate Int
-  games Int
-  damagePerMinute Int
-  goldAtFive Int
-  goldAtTen Int
-  win Int
-  lose Int
+  winRate Decimal 
+  games Decimal 
+  damagePerMinute Decimal 
+  goldAtFive Decimal 
+  goldAtTen Decimal 
+  win Decimal 
+  lose Decimal 
 }

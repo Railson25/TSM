@@ -22,12 +22,12 @@ export const Heading = () => {
           />
         </div>
         <div>
-          <Link href={userId ? "/team" : "/sign-in"}>
+          <Link href={userId ? "/" : "/sign-in"}>
             <Button
               variant="premium"
               className="md:text-lg p-4 md:p-6 rounded-full font-semibold"
             >
-              {userId ? "Team" : "Login now"}
+              Login now
             </Button>
           </Link>
         </div>
