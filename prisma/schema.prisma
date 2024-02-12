@@ -16,6 +16,7 @@ model Champion {
   id String @id @default(cuid()) 
   userId String
   name String
+  image String
   winRate Decimal 
   games Decimal 
   damagePerMinute Decimal 

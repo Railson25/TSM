@@ -28,7 +28,7 @@ export function NavMenu() {
           onClick={() => router.push("/champion/new")}
         >
           <Plus size={15} />
-          <span>Add Game</span>
+          <span>Add Champion</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer flex gap-2 items-center"
