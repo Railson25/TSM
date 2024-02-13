@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, auth } from "@clerk/nextjs";
 import { Navbar } from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Container } from "@/components/conatiner";
 import { Toaster } from "@/components/ui/toaster";
+import { Heading } from "@/components/heading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { userId } = auth();
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
@@ -41,7 +43,10 @@ export default function RootLayout({
             <main className=" flex flex-col min-h-screen bg-secondary">
               <Navbar />
               <section className="flex-grow">
-                <Container>{children}</Container>
+                <Container>
+                  {children}
+                  {!userId && <Heading />}
+                </Container>
               </section>
             </main>
           </ThemeProvider>

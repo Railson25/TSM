@@ -25,10 +25,10 @@ export function NavMenu() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           className="cursor-pointer flex gap-2 items-center"
-          onClick={() => router.push("/champion/new")}
+          onClick={() => router.push("/champions")}
         >
           <Plus size={15} />
-          <span>Add Champion</span>
+          <span>My Champions</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer flex gap-2 items-center"
