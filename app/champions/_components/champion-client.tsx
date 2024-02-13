@@ -28,7 +28,7 @@ export const ChampionClient = ({ data }: ChampionClientProps) => {
         </Button>
       </div>
       <Separator />
-      <DataTable columns={columns} searchKey="name" data={[]} />
+      <DataTable columns={columns} searchKey="name" data={data} />
     </>
   );
 };
