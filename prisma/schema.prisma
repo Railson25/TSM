@@ -12,16 +12,20 @@ datasource db {
 }
 
 
+enum ChampionRole{
+  SUPPORT
+  ADC
+  MID
+  JG
+  TOP
+}
+
 model Champion {
   id String @id @default(cuid()) 
-  userId String
   name String
-  image String
-  winRate Decimal 
-  games Decimal 
-  damagePerMinute Decimal 
-  goldAtFive Decimal 
-  goldAtTen Decimal 
-  win Decimal 
-  lose Decimal 
+  imageURL String
+  role ChampionRole @default(ADC)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+

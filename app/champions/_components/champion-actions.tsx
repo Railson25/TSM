@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import axios from "axios";
 
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 
@@ -15,6 +16,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ChampionActionsProps {
   data: ChampionColumn;
@@ -25,8 +27,29 @@ export const ChampionActions = ({ data }: ChampionActionsProps) => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const { toast } = useToast();
 
-  const onDelete = () => {};
+  const onDelete = async () => {
+    try {
+      setLoading(true);
+      await axios.delete(`/api/champions/${data.id}`);
+      router.refresh();
+      router.push(`/champions`);
+      toast({
+        variant: "success",
+        description: "Champion updated",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description:
+          "Make sure you removed all games using this champion first.!",
+      });
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
+  };
 
   return (
     <>

@@ -8,14 +8,13 @@ const Champions = async ({ params }: { params: { championId: string } }) => {
       id: params.championId,
     },
     orderBy: {
-      games: "desc",
+      createdAt: "desc",
     },
   });
 
   const formattedChampions: ChampionColumn[] = chamapions.map((item) => ({
     id: item.id,
     name: item.name,
-    games: item.games.toNumber(),
   }));
 
   console.log(formattedChampions);

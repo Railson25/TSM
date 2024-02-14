@@ -1,24 +1,20 @@
-import { getChampionById } from "@/actions/getChampionById";
-import { ChampionForm } from "@/components/champion-form";
-
-import { auth } from "@clerk/nextjs";
+import { ChampionForm } from "@/app/champions/[championId]/_components/champion-form";
+import prismaDB from "@/lib/prismadb";
 
 interface ChampionProps {
   params: { championId: string };
 }
 
 const Champion = async ({ params }: ChampionProps) => {
-  const champion = await getChampionById(params.championId);
-
-  const { userId } = auth();
-
-  if (!userId) return <div>Not authenticated...</div>;
-
-  if (champion && champion.userId !== userId) return <div> Access denied</div>;
+  const champion = await prismaDB.champion.findUnique({
+    where: {
+      id: params.championId,
+    },
+  });
 
   return (
     <div>
-      <ChampionForm champion={champion} />
+      <ChampionForm initialData={champion} />
     </div>
   );
 };
