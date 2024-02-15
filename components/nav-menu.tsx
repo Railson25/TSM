@@ -32,7 +32,7 @@ export function NavMenu() {
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer flex gap-2 items-center"
-          onClick={() => router.push("/my-games")}
+          onClick={() => router.push("/games")}
         >
           <PenLine size={15} />
           <span>My games</span>

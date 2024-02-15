@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -27,5 +25,29 @@ model Champion {
   role ChampionRole @default(ADC)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  games GameChampion[]
 }
 
+model Game {
+  id String @id @default(cuid()) 
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  champions GameChampion[]
+}
+
+
+model GameChampion{
+  id String @id @default(cuid())
+  damage Int
+  gold Int
+  goldAtFiveMin  Int?
+  goldAtTenMin Int?
+
+  championId String
+  champion Champion @relation(fields: [championId], references: [id])
+
+  gameId String
+  game Game @relation(fields: [gameId], references: [id])
+  @@unique([gameId, championId])
+  @@index([gameId])
+}
