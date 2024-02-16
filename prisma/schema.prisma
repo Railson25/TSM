@@ -22,7 +22,7 @@ model Champion {
   id String @id @default(cuid()) 
   name String
   imageURL String
-  role ChampionRole @default(ADC)
+  roles Role[] @relation("ChampionRole")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   games GameChampion[]
@@ -35,6 +35,11 @@ model Game {
   champions GameChampion[]
 }
 
+model Role {
+  id String @id @default(cuid())
+  role ChampionRole 
+  champion Champion[] @relation("ChampionRole")
+}
 
 model GameChampion{
   id String @id @default(cuid())
@@ -42,6 +47,8 @@ model GameChampion{
   gold Int
   goldAtFiveMin  Int?
   goldAtTenMin Int?
+
+  role ChampionRole
 
   championId String
   champion Champion @relation(fields: [championId], references: [id])

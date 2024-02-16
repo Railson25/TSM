@@ -13,7 +13,6 @@ const Games = async () => {
     id: item.id,
   }));
 
-  console.log(formattedGames);
   return (
     <div className=" flex flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

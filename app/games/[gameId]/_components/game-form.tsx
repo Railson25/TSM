@@ -27,8 +27,16 @@ import { Separator } from "@/components/ui/separator";
 import { Header } from "@/components/header";
 import { AlertModal } from "@/components/alert-modal";
 import { useParams, useRouter } from "next/navigation";
+import { ChampionSelect } from "@/components/select-champion";
 
 const formSchema = z.object({
+  champion: z.object({
+    id: z.string(),
+    name: z.string(),
+    imageURL: z.string(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
+  }),
   damage: z.number().min(1, {
     message: "Damage is required",
   }),
@@ -41,25 +49,32 @@ const formSchema = z.object({
 
 interface GameFormProps {
   initialData: GameChampion | null;
+  champions: Champion[];
 }
 type GameFormValues = z.infer<typeof formSchema>;
 
-export const GameForm = ({ initialData }: GameFormProps) => {
+export const GameForm = ({ initialData, champions }: GameFormProps) => {
   const params = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedChampion, setSelectedChampion] = useState<Champion | null>(
+    null
+  );
+
+  console.log(params);
 
   const { toast } = useToast();
 
   const title = initialData ? "Edit game" : "Create game";
   const description = initialData ? "Edit a game" : "Add a new game";
-  const toastMessage = initialData ? "Game updated." : "Game created.";
+
   const action = initialData ? "Save changes" : "Create";
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
+      champion: {},
       damage: 0,
       gold: 0,
       goldAtFiveMin: 0,
@@ -145,6 +160,22 @@ export const GameForm = ({ initialData }: GameFormProps) => {
           className="space-y-8 w-full"
         >
           <div className="grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="champion"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Champions</FormLabel>
+                  <FormControl>
+                    <ChampionSelect
+                      selectedChampion={selectedChampion}
+                      setSelectedChampion={setSelectedChampion}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="damage"

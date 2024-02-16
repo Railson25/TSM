@@ -36,15 +36,11 @@ export async function POST(req: Request, params: { championId: string }) {
   }
 }
 
-export async function GET(req: Request, params: { championId: string }) {
+export async function GET() {
   try {
-    if (!params.championId) {
-      return new NextResponse("Champion id is required", { status: 400 });
-    }
-
     const champions = await prismaDB.champion.findMany({
-      where: {
-        id: params.championId,
+      orderBy: {
+        createdAt: "asc",
       },
     });
 
