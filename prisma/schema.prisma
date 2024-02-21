@@ -28,6 +28,12 @@ model Champion {
   games GameChampion[]
 }
 
+model Role {
+  id String @id @default(cuid())
+  role ChampionRole 
+  champion Champion[] @relation("ChampionRole")
+}
+
 model Game {
   id String @id @default(cuid()) 
   createdAt    DateTime     @default(now())
@@ -35,11 +41,6 @@ model Game {
   champions GameChampion[]
 }
 
-model Role {
-  id String @id @default(cuid())
-  role ChampionRole 
-  champion Champion[] @relation("ChampionRole")
-}
 
 model GameChampion{
   id String @id @default(cuid())

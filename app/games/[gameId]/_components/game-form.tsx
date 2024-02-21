@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Champion, GameChampion } from "@prisma/client";
+import { ChampionRole, GameChampion } from "@prisma/client";
 
 import axios from "axios";
 
@@ -26,17 +26,11 @@ import { Trash } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Header } from "@/components/header";
 import { AlertModal } from "@/components/alert-modal";
-import { useParams, useRouter } from "next/navigation";
-import { ChampionSelect } from "@/components/select-champion";
+import { useRouter } from "next/navigation";
+
+import { ChampionRoleSelect } from "@/components/select-role";
 
 const formSchema = z.object({
-  champion: z.object({
-    id: z.string(),
-    name: z.string(),
-    imageURL: z.string(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-  }),
   damage: z.number().min(1, {
     message: "Damage is required",
   }),
@@ -45,36 +39,37 @@ const formSchema = z.object({
   }),
   goldAtFiveMin: z.number().nullable().default(0),
   goldAtTenMin: z.number().nullable().default(0),
+  role: z.string().optional(),
 });
 
 interface GameFormProps {
-  initialData: GameChampion | null;
-  champions: Champion[];
+  initialData: GameChampion;
 }
 type GameFormValues = z.infer<typeof formSchema>;
 
-export const GameForm = ({ initialData, champions }: GameFormProps) => {
-  const params = useParams();
+export const GameForm = ({ initialData }: GameFormProps) => {
   const router = useRouter();
+  const [value, setValue] = useState<ChampionRole | undefined>(undefined);
+
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [selectedChampion, setSelectedChampion] = useState<Champion | null>(
-    null
-  );
-
-  console.log(params);
+  const [openRole, setOpenRole] = useState(false);
 
   const { toast } = useToast();
 
-  const title = initialData ? "Edit game" : "Create game";
-  const description = initialData ? "Edit a game" : "Add a new game";
+  const title = initialData
+    ? "Edit a champion in game"
+    : "Create a champion in game";
+  const description = initialData
+    ? "Edit a champion in game"
+    : "Add a new champion in game";
 
-  const action = initialData ? "Save changes" : "Create";
+  const action = initialData ? "Save changes" : "Create a champion in game";
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
-      champion: {},
+      role: "",
       damage: 0,
       gold: 0,
       goldAtFiveMin: 0,
@@ -83,53 +78,32 @@ export const GameForm = ({ initialData, champions }: GameFormProps) => {
   });
 
   const onSubmit = async (data: GameFormValues) => {
-    try {
-      setLoading(true);
-      if (initialData) {
-        await axios.patch(`/api/champions/${params.championId}`, data);
-        toast({
-          variant: "success",
-          description: "Champion updated",
-        });
-      } else {
-        await axios.post(`/api/champions`, data);
-        toast({
-          variant: "success",
-          description: "Champion created",
-        });
-      }
-      router.push(`/champions`);
-      router.refresh();
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        description: "Something went wrong!",
-      });
-    } finally {
-      setLoading(false);
-    }
+    data.role = value;
+    console.log(form.getValues());
+
+    console.log(data);
   };
 
   const onDelete = async () => {
-    try {
-      setLoading(true);
-      await axios.delete(`/api/champions/${params.championId}`);
-      router.push(`/champions`);
-      router.refresh();
-      toast({
-        variant: "success",
-        description: "Game updated",
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        description:
-          "Make sure you removed all games using this champion first.!",
-      });
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
+    // try {
+    //   setLoading(true);
+    //   await axios.delete(`/api/champions/${params.championId}`);
+    //   router.push(`/champions`);
+    //   router.refresh();
+    //   toast({
+    //     variant: "success",
+    //     description: "Game updated",
+    //   });
+    // } catch (error) {
+    //   toast({
+    //     variant: "destructive",
+    //     description:
+    //       "Make sure you removed all games using this champion first.!",
+    //   });
+    // } finally {
+    //   setLoading(false);
+    //   setOpen(false);
+    // }
   };
 
   return (
@@ -159,17 +133,19 @@ export const GameForm = ({ initialData, champions }: GameFormProps) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="champion"
+              name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Champions</FormLabel>
+                  <FormLabel>Champion Damage</FormLabel>
                   <FormControl>
-                    <ChampionSelect
-                      selectedChampion={selectedChampion}
-                      setSelectedChampion={setSelectedChampion}
+                    <ChampionRoleSelect
+                      value={value}
+                      setValue={setValue}
+                      open={openRole}
+                      setOpen={setOpenRole}
                     />
                   </FormControl>
                   <FormMessage />
@@ -183,7 +159,12 @@ export const GameForm = ({ initialData, champions }: GameFormProps) => {
                 <FormItem>
                   <FormLabel>Champion Damage</FormLabel>
                   <FormControl>
-                    <Input type="number" disabled={loading} {...field} />
+                    <Input
+                      type="number"
+                      disabled={loading}
+                      {...field}
+                      value={field.value}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -196,7 +177,12 @@ export const GameForm = ({ initialData, champions }: GameFormProps) => {
                 <FormItem>
                   <FormLabel>Champion Gold</FormLabel>
                   <FormControl>
-                    <Input disabled={loading} type="number" {...field} />
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      value={field.value !== null ? +field.value : 0}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -213,7 +199,7 @@ export const GameForm = ({ initialData, champions }: GameFormProps) => {
                       disabled={loading}
                       type="number"
                       {...field}
-                      value={field.value !== null ? field.value : 0}
+                      value={field.value !== null ? +field.value : 0}
                     />
                   </FormControl>
                   <FormMessage />
@@ -231,7 +217,7 @@ export const GameForm = ({ initialData, champions }: GameFormProps) => {
                       disabled={loading}
                       type="number"
                       {...field}
-                      value={field.value !== null ? field.value : 0}
+                      value={field.value !== null ? +field.value : 0}
                     />
                   </FormControl>
                   <FormMessage />

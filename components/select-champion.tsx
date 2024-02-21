@@ -16,12 +16,13 @@ import { Champion } from "@prisma/client";
 import axios from "axios";
 
 interface ChampionSelectProps {
-  selectedChampion: Champion | null;
-  setSelectedChampion: React.Dispatch<React.SetStateAction<Champion | null>>;
+  selectedChampion: Champion | undefined;
+  setSelectedChampion: React.Dispatch<
+    React.SetStateAction<Champion | undefined>
+  >;
 }
 
 export const ChampionSelect = ({
-  selectedChampion,
   setSelectedChampion,
 }: ChampionSelectProps) => {
   const [champions, setChampions] = React.useState<Champion[]>([]);
@@ -36,13 +37,6 @@ export const ChampionSelect = ({
     }
   };
 
-  console.log(champions);
-
-  const handleSelectChampion = (champion: Champion) => {
-    setSelectedChampion(champion);
-    setIsOpen(false);
-  };
-
   return (
     <Select onOpenChange={handleClick}>
       <SelectTrigger className="w-[180px]">
@@ -52,11 +46,7 @@ export const ChampionSelect = ({
         <SelectGroup>
           <SelectLabel>Champions</SelectLabel>
           {champions.map((champion) => (
-            <SelectItem
-              key={champion.id}
-              value={champion.name}
-              onClick={() => handleSelectChampion(champion)}
-            >
+            <SelectItem key={champion.id} value={champion.name}>
               {champion.name}
             </SelectItem>
           ))}
