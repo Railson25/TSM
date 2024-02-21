@@ -142,6 +142,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                   <FormLabel>Champion Damage</FormLabel>
                   <FormControl>
                     <ChampionRoleSelect
+                      {...field}
                       value={value}
                       setValue={setValue}
                       open={openRole}
@@ -163,6 +164,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                       type="number"
                       disabled={loading}
                       {...field}
+                      {...form.register("damage", { valueAsNumber: true })}
                       value={field.value}
                     />
                   </FormControl>
@@ -181,7 +183,8 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                       disabled={loading}
                       type="number"
                       {...field}
-                      value={field.value !== null ? +field.value : 0}
+                      value={field.value}
+                      {...form.register("gold", { valueAsNumber: true })}
                     />
                   </FormControl>
                   <FormMessage />
@@ -199,7 +202,10 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                       disabled={loading}
                       type="number"
                       {...field}
-                      value={field.value !== null ? +field.value : 0}
+                      {...form.register("goldAtFiveMin", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value || undefined}
                     />
                   </FormControl>
                   <FormMessage />
@@ -217,7 +223,10 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                       disabled={loading}
                       type="number"
                       {...field}
-                      value={field.value !== null ? +field.value : 0}
+                      {...form.register("goldAtTenMin", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value || undefined}
                     />
                   </FormControl>
                   <FormMessage />
