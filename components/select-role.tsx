@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/popover";
 import { ChampionRole } from "@prisma/client";
 
-const frameworks: { value: ChampionRole; label: string }[] = [
+export const frameworks: { value: ChampionRole; label: string }[] = [
   { value: "SUPPORT", label: "SUPPORT" },
   { value: "ADC", label: "ADC" },
   { value: "MID", label: "MID" },

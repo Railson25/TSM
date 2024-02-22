@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ChampionRole, GameChampion } from "@prisma/client";
+import { Champion, ChampionRole, GameChampion } from "@prisma/client";
 
 import axios from "axios";
 
@@ -21,14 +21,23 @@ import { useState } from "react";
 import { useToast } from "../../../../components/ui/use-toast";
 
 import { Button } from "../../../../components/ui/button";
-import { Trash } from "lucide-react";
+import { Check, ChevronsUpDown, Trash } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import { Header } from "@/components/header";
 import { AlertModal } from "@/components/alert-modal";
 import { useRouter } from "next/navigation";
 
-import { ChampionRoleSelect } from "@/components/select-role";
+import { frameworks } from "@/components/select-role";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   damage: z.number().min(1, {
@@ -40,6 +49,9 @@ const formSchema = z.object({
   goldAtFiveMin: z.number().nullable().default(0),
   goldAtTenMin: z.number().nullable().default(0),
   role: z.string().optional(),
+  championId: z.string().min(1, {
+    message: "Champion is required",
+  }),
 });
 
 interface GameFormProps {
@@ -49,11 +61,11 @@ type GameFormValues = z.infer<typeof formSchema>;
 
 export const GameForm = ({ initialData }: GameFormProps) => {
   const router = useRouter();
-  const [value, setValue] = useState<ChampionRole | undefined>(undefined);
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [openRole, setOpenRole] = useState(false);
+
+  const [champions, setChampions] = useState<Champion[]>([]);
 
   const { toast } = useToast();
 
@@ -70,6 +82,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       role: "",
+      championId: "",
       damage: 0,
       gold: 0,
       goldAtFiveMin: 0,
@@ -78,10 +91,15 @@ export const GameForm = ({ initialData }: GameFormProps) => {
   });
 
   const onSubmit = async (data: GameFormValues) => {
-    data.role = value;
-    console.log(form.getValues());
-
     console.log(data);
+
+    try {
+      formSchema.parse(data);
+    } catch (error: any) {
+      console.error(error.errors);
+      return;
+    }
+    form.reset();
   };
 
   const onDelete = async () => {
@@ -104,6 +122,23 @@ export const GameForm = ({ initialData }: GameFormProps) => {
     //   setLoading(false);
     //   setOpen(false);
     // }
+  };
+
+  const handleClick = async () => {
+    try {
+      const response = await axios.get("/api/champions");
+      setChampions(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleChangeChampion = (value: string) => {
+    form.setValue("championId", value);
+  };
+
+  const handleChangeChampionRole = (value: string) => {
+    form.setValue("role", value);
   };
 
   return (
@@ -139,15 +174,66 @@ export const GameForm = ({ initialData }: GameFormProps) => {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Champion Damage</FormLabel>
+                  <FormLabel>Champion Role</FormLabel>
                   <FormControl>
-                    <ChampionRoleSelect
-                      {...field}
-                      value={value}
-                      setValue={setValue}
-                      open={openRole}
-                      setOpen={setOpenRole}
-                    />
+                    <Select
+                      onValueChange={handleChangeChampionRole}
+                      onOpenChange={handleClick}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Role</SelectLabel>
+
+                          {frameworks.map((champion) => (
+                            <SelectItem
+                              key={champion.value}
+                              {...field}
+                              value={champion.label}
+                            >
+                              {champion.value}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="championId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Champion</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={handleChangeChampion}
+                      onOpenChange={handleClick}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a Champion" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Champions</SelectLabel>
+
+                          {champions.map((champion) => (
+                            <SelectItem
+                              key={champion.id}
+                              {...field}
+                              value={champion.id}
+                            >
+                              {champion.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
