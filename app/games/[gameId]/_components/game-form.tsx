@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Champion, ChampionRole, GameChampion } from "@prisma/client";
+import { Champion, GameChampion } from "@prisma/client";
 
 import axios from "axios";
 
@@ -16,12 +16,12 @@ import {
   FormMessage,
 } from "../../../../components/ui/form";
 import { Input } from "../../../../components/ui/input";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useToast } from "../../../../components/ui/use-toast";
 
 import { Button } from "../../../../components/ui/button";
-import { Check, ChevronsUpDown, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
 import { Header } from "@/components/header";
@@ -38,6 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useGameData } from "@/context/game-data-context";
 
 const formSchema = z.object({
   damage: z.number().min(1, {
@@ -48,25 +49,26 @@ const formSchema = z.object({
   }),
   goldAtFiveMin: z.number().nullable().default(0),
   goldAtTenMin: z.number().nullable().default(0),
-  role: z.string().optional(),
+  role: z.string().min(1, {
+    message: "Champion is required",
+  }),
   championId: z.string().min(1, {
     message: "Champion is required",
   }),
 });
 
 interface GameFormProps {
-  initialData: GameChampion;
+  initialData: GameChampion | null;
 }
-type GameFormValues = z.infer<typeof formSchema>;
+export type GameFormValues = z.infer<typeof formSchema>;
 
 export const GameForm = ({ initialData }: GameFormProps) => {
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const [champions, setChampions] = useState<Champion[]>([]);
-
+  const { addToGameData } = useGameData();
   const { toast } = useToast();
 
   const title = initialData
@@ -90,17 +92,22 @@ export const GameForm = ({ initialData }: GameFormProps) => {
     },
   });
 
-  const onSubmit = async (data: GameFormValues) => {
-    console.log(data);
+  const addToCreateAGame = useCallback(
+    async (data: GameFormValues) => {
+      try {
+        formSchema.parse(data);
+        addToGameData(data);
+        console.log(data);
+        form.reset();
+      } catch (error: any) {
+        console.error(error.errors);
+        return;
+      }
+    },
+    [addToGameData, form]
+  );
 
-    try {
-      formSchema.parse(data);
-    } catch (error: any) {
-      console.error(error.errors);
-      return;
-    }
-    form.reset();
-  };
+  useEffect(() => {}, [addToCreateAGame]);
 
   const onDelete = async () => {
     // try {
@@ -165,7 +172,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
       <Separator className="mb-10" />
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(addToCreateAGame)}
           className="space-y-8 w-full"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">

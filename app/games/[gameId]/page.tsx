@@ -23,7 +23,7 @@ const Game = async ({ params }: gameProps) => {
       </div>
       <Separator className="mt-10 mb-3" />
       <Header title="Create Game" description="Add a new game" />
-      <GameTable columns={columns} data={[]} searchKey="game" />
+      <GameTable columns={columns} searchKey="game" />
     </>
   );
 };

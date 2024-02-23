@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Container } from "@/components/conatiner";
 import { Toaster } from "@/components/ui/toaster";
 import { Heading } from "@/components/heading";
+import { GameDataProvider } from "@/context/game-data-context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,27 +32,29 @@ export default function RootLayout({
   const { userId } = auth();
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Toaster />
-            <main className=" flex flex-col min-h-screen bg-secondary">
-              <Navbar />
-              <section className="flex-grow">
-                <Container>
-                  {children}
-                  {!userId && <Heading />}
-                </Container>
-              </section>
-            </main>
-          </ThemeProvider>
-        </body>
-      </html>
+      <GameDataProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body className={inter.className}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Toaster />
+              <main className=" flex flex-col min-h-screen bg-secondary">
+                <Navbar />
+                <section className="flex-grow">
+                  <Container>
+                    {children}
+                    {!userId && <Heading />}
+                  </Container>
+                </section>
+              </main>
+            </ThemeProvider>
+          </body>
+        </html>
+      </GameDataProvider>
     </ClerkProvider>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import {
   ColumnDef,
@@ -21,23 +20,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React from "react";
+import { GameData, useGameData } from "@/context/game-data-context";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableProps<TValue> {
+  columns: ColumnDef<GameData, TValue>[];
   searchKey: string;
 }
 
 export function GameTable<TData, TValue>({
   columns,
-  data,
   searchKey,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TValue>) {
+  const { gameData } = useGameData();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const table = useReactTable({
-    data,
+    data: gameData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -101,7 +100,11 @@ export function GameTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-start space-x-2 py-4">
-        <Button variant="default" size="lg">
+        <Button
+          variant="default"
+          size="lg"
+          onClick={() => console.log(gameData)}
+        >
           Create
         </Button>
       </div>

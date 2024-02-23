@@ -2,21 +2,22 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ChampionActions } from "../../_components/game-actions";
+import { GameData } from "@/context/game-data-context";
 
-export type GameTableColumn = {
-  id: string;
-  name: string;
-  damage: number;
-};
+// export type GameTableColumn = {
+//   championId: string;
+//   gold: number;
+//   damage: number;
+// };
 
-export const columns: ColumnDef<GameTableColumn>[] = [
+export const columns: ColumnDef<GameData>[] = [
   {
-    accessorKey: "id",
-    header: "Games",
+    accessorKey: "role",
+    header: "Champion Role",
   },
   {
-    accessorKey: "name",
-    header: "Champion name",
+    accessorKey: "gold",
+    header: "Champion gold",
   },
   {
     accessorKey: "damage",
