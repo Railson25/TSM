@@ -47,8 +47,8 @@ const formSchema = z.object({
   gold: z.number().min(1, {
     message: "Gold is required",
   }),
-  goldAtFiveMin: z.number().nullable().default(0),
-  goldAtTenMin: z.number().nullable().default(0),
+  goldAtFiveMin: z.number().nullable(),
+  goldAtTenMin: z.number().nullable(),
   role: z.string().min(1, {
     message: "Champion is required",
   }),
@@ -92,22 +92,19 @@ export const GameForm = ({ initialData }: GameFormProps) => {
     },
   });
 
-  const addToCreateAGame = useCallback(
-    async (data: GameFormValues) => {
-      try {
-        formSchema.parse(data);
-        addToGameData(data);
-        console.log(data);
-        form.reset();
-      } catch (error: any) {
-        console.error(error.errors);
-        return;
-      }
-    },
-    [addToGameData, form]
-  );
+  const addToCreateAGame = (data: GameFormValues) => {
+    try {
+      formSchema.parse(data);
+      addToGameData(data);
+      console.log(data);
+      form.reset();
+    } catch (error: any) {
+      console.error(error.errors);
+      return;
+    }
+  };
 
-  useEffect(() => {}, [addToCreateAGame]);
+  // useEffect(() => {}, [addToCreateAGame]);
 
   const onDelete = async () => {
     // try {
@@ -140,14 +137,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
     }
   };
 
-  const handleChangeChampion = (value: string) => {
-    form.setValue("championId", value);
-  };
-
-  const handleChangeChampionRole = (value: string) => {
-    form.setValue("role", value);
-  };
-
+  console.log("srklghjsdroilhosidrghj", form.watch());
   return (
     <>
       <AlertModal
@@ -184,8 +174,9 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                   <FormLabel>Champion Role</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={handleChangeChampionRole}
+                      onValueChange={field.onChange}
                       onOpenChange={handleClick}
+                      value={field.value}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a role" />
@@ -196,9 +187,8 @@ export const GameForm = ({ initialData }: GameFormProps) => {
 
                           {frameworks.map((champion) => (
                             <SelectItem
-                              key={champion.value}
-                              {...field}
                               value={champion.label}
+                              key={champion.value}
                             >
                               {champion.value}
                             </SelectItem>
@@ -219,7 +209,8 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                   <FormLabel>Champion</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={handleChangeChampion}
+                      onValueChange={field.onChange}
+                      value={field.value}
                       onOpenChange={handleClick}
                     >
                       <SelectTrigger className="w-full">
@@ -230,11 +221,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                           <SelectLabel>Champions</SelectLabel>
 
                           {champions.map((champion) => (
-                            <SelectItem
-                              key={champion.id}
-                              {...field}
-                              value={champion.id}
-                            >
+                            <SelectItem value={champion.id} key={champion.id}>
                               {champion.name}
                             </SelectItem>
                           ))}
@@ -298,7 +285,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                       {...form.register("goldAtFiveMin", {
                         valueAsNumber: true,
                       })}
-                      value={field.value || undefined}
+                      value={field.value?.toString()}
                     />
                   </FormControl>
                   <FormMessage />
@@ -319,7 +306,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                       {...form.register("goldAtTenMin", {
                         valueAsNumber: true,
                       })}
-                      value={field.value || undefined}
+                      value={field.value?.toString()}
                     />
                   </FormControl>
                   <FormMessage />
