@@ -245,7 +245,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                       disabled={loading}
                       {...field}
                       {...form.register("damage", { valueAsNumber: true })}
-                      value={field.value}
+                      value={field.value.toString()}
                     />
                   </FormControl>
                   <FormMessage />
@@ -263,7 +263,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
                       disabled={loading}
                       type="number"
                       {...field}
-                      value={field.value}
+                      value={field.value.toString()}
                       {...form.register("gold", { valueAsNumber: true })}
                     />
                   </FormControl>
