@@ -41,7 +41,7 @@ export function GameTable<TData, TValue>({
   const params = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const { gameData } = useGameData();
+  const { gameData, clearGameData } = useGameData();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -74,6 +74,7 @@ export function GameTable<TData, TValue>({
         description: "Game created",
       });
       // }
+      clearGameData();
       router.push(`/games`);
       router.refresh();
     } catch (error) {

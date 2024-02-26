@@ -18,6 +18,18 @@ export async function POST(req: Request) {
       return new NextResponse("Invalid request body", { status: 400 });
     }
 
+    const championIds = new Set<string>();
+
+    for (const data of body) {
+      const { championId } = data;
+      if (championIds.has(championId)) {
+        return new NextResponse(`Duplicate championId: ${championId}`, {
+          status: 400,
+        });
+      }
+      championIds.add(championId);
+    }
+
     for (const data of body) {
       const { championId, role, damage, gold, goldAtFiveMin, goldAtTenMin } =
         data;

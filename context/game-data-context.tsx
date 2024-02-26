@@ -14,6 +14,7 @@ export interface GameData {
 interface GameDataContextType {
   gameData: GameData[];
   addToGameData: (data: GameData) => void;
+  clearGameData: () => void;
 }
 
 const GameDataContext = createContext<GameDataContextType | undefined>(
@@ -45,8 +46,14 @@ export const GameDataProvider: React.FC<{ children: React.ReactNode }> = ({
     setGameData([...gameData, data]);
   };
 
+  const clearGameData = () => {
+    setGameData([]);
+  };
+
   return (
-    <GameDataContext.Provider value={{ gameData, addToGameData }}>
+    <GameDataContext.Provider
+      value={{ gameData, addToGameData, clearGameData }}
+    >
       {children}
     </GameDataContext.Provider>
   );
