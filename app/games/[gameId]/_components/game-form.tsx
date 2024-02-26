@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "../../../../components/ui/form";
 import { Input } from "../../../../components/ui/input";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useToast } from "../../../../components/ui/use-toast";
 
@@ -99,7 +99,18 @@ export const GameForm = ({ initialData }: GameFormProps) => {
       console.log(data);
       form.reset();
     } catch (error: any) {
-      console.error(error.errors);
+      if (
+        error instanceof Error &&
+        error.message.startsWith("Champion with ID")
+      ) {
+        toast({
+          variant: "destructive",
+          description: "Esse campeão já foi adicionado a este game",
+        });
+        console.error(error.message);
+      } else {
+        console.error(error.errors);
+      }
       return;
     }
   };

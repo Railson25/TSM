@@ -14,48 +14,36 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
-    const newGames = await Promise.all(
-      body.map(async (data: GameFormValues) => {
-        const { damage, gold, role, championId, goldAtFiveMin, goldAtTenMin } =
-          data;
+    if (!Array.isArray(body)) {
+      return new NextResponse("Invalid request body", { status: 400 });
+    }
 
-        if (!championId) {
-          return new NextResponse("Champion is required", { status: 400 });
-        }
-        if (!role) {
-          return new NextResponse("Champion role is required", { status: 400 });
-        }
+    for (const data of body) {
+      const { championId, role, damage, gold, goldAtFiveMin, goldAtTenMin } =
+        data;
+      if (!championId || !role || !damage || !gold) {
+        return new NextResponse("Missing params of champion", { status: 400 });
+      }
+    }
 
-        if (!damage) {
-          return new NextResponse("Champion damage is required", {
-            status: 400,
-          });
-        }
-
-        if (!gold) {
-          return new NextResponse("Champion gold is required", { status: 400 });
-        }
-
-        return prismaDB.game.create({
-          data: {
-            champions: {
-              createMany: {
-                data: {
-                  damage,
-                  gold,
-                  goldAtFiveMin,
-                  goldAtTenMin,
-                  role: data.role as ChampionRole,
-                  championId,
-                },
-              },
-            },
+    const game = await prismaDB.game.create({
+      data: {
+        champions: {
+          createMany: {
+            data: body.map((data: GameFormValues) => ({
+              damage: data.damage,
+              gold: data.gold,
+              goldAtFiveMin: data.goldAtFiveMin,
+              goldAtTenMin: data.goldAtTenMin,
+              role: data.role as ChampionRole,
+              championId: data.championId,
+            })),
           },
-        });
-      })
-    );
+        },
+      },
+    });
 
-    return NextResponse.json(newGames);
+    return NextResponse.json(game);
   } catch (error) {
     console.log("GAME_POST", error);
     return new NextResponse("Internal error", { status: 500 });

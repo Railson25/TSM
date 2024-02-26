@@ -34,6 +34,14 @@ export const GameDataProvider: React.FC<{ children: React.ReactNode }> = ({
   const [gameData, setGameData] = useState<GameData[]>([]);
 
   const addToGameData = (data: GameData) => {
+    const isIdDuplicate = gameData.some(
+      (game) => game.championId === data.championId
+    );
+
+    if (isIdDuplicate) {
+      throw new Error(`Champion with ID ${data.championId} already exists.`);
+    }
+
     setGameData([...gameData, data]);
   };
 
