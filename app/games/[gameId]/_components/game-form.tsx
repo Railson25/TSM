@@ -137,7 +137,6 @@ export const GameForm = ({ initialData }: GameFormProps) => {
     }
   };
 
-  console.log("srklghjsdroilhosidrghj", form.watch());
   return (
     <>
       <AlertModal

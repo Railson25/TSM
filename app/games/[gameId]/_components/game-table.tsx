@@ -19,8 +19,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { useState } from "react";
 import { GameData, useGameData } from "@/context/game-data-context";
+
+import { GameFormValues } from "./game-form";
+import { useParams, useRouter } from "next/navigation";
+import axios from "axios";
+import { toast } from "@/components/ui/use-toast";
+
+console.log(GameTable);
 
 interface DataTableProps<TValue> {
   columns: ColumnDef<GameData, TValue>[];
@@ -31,6 +38,9 @@ export function GameTable<TData, TValue>({
   columns,
   searchKey,
 }: DataTableProps<TValue>) {
+  const params = useParams();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { gameData } = useGameData();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -47,6 +57,34 @@ export function GameTable<TData, TValue>({
     },
   });
 
+  const onSubmit = async (data: GameFormValues[]) => {
+    try {
+      setLoading(true);
+      // if (data) {
+      //   console.log(data);
+      //   await axios.patch(`/api/games/${params.data}`, data);
+      //   toast({
+      //     variant: "success",
+      //     description: "Game updated",
+      //   });
+      // } else {
+      await axios.post(`/api/games`, data);
+      toast({
+        variant: "success",
+        description: "Game created",
+      });
+      // }
+      router.push(`/games`);
+      router.refresh();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Something went wrong!",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div>
       <div className="rounded-md border mt-6">
@@ -100,11 +138,7 @@ export function GameTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-start space-x-2 py-4">
-        <Button
-          variant="default"
-          size="lg"
-          onClick={() => console.log(gameData)}
-        >
+        <Button variant="default" size="lg" onClick={() => onSubmit(gameData)}>
           Create
         </Button>
       </div>
