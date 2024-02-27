@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Separator } from "@/components/ui/separator";
 import { Form } from "@/components/ui/form";
@@ -13,10 +13,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { FieldValues, SubmitHandler, useFormContext } from "react-hook-form";
 
 interface gameModalProps {
-  isOpen?: boolean;
+  onSubmit?: () => void;
   title?: string;
   body?: React.ReactElement;
   footer?: React.ReactElement;
+  actionLabel?: string;
+  secondaryAction?: () => void;
+  secondaryActionLabel?: string;
+  disabled?: boolean;
 }
 
 interface FieldValue extends GameFormValues {}
@@ -38,7 +42,16 @@ export const formSchema = z.object({
   }),
 });
 
-export const GameModal = ({ body, isOpen, footer, title }: gameModalProps) => {
+export const GameModal = ({
+  body,
+  onSubmit,
+  footer,
+  title,
+  actionLabel,
+  secondaryAction,
+  secondaryActionLabel,
+  disabled,
+}: gameModalProps) => {
   const [showModal, setShowModal] = useState(true);
   const { toast } = useToast();
   const form = useFormContext();
@@ -67,6 +80,20 @@ export const GameModal = ({ body, isOpen, footer, title }: gameModalProps) => {
     }
   };
 
+  const handleSecondaryAction = useCallback(() => {
+    if (disabled || !secondaryAction) {
+      return;
+    }
+    secondaryAction();
+  }, [disabled, secondaryAction]);
+
+  const handleSubmit = useCallback(() => {
+    if (disabled || !onSubmit) {
+      return;
+    }
+    onSubmit();
+  }, [disabled, onSubmit]);
+
   return (
     <>
       <div className="flex justify-center items-center">
@@ -90,20 +117,26 @@ export const GameModal = ({ body, isOpen, footer, title }: gameModalProps) => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                       {body}
                     </div>
-                    <Button className="ml-auto" type="submit">
-                      Add chmapion to game
-                    </Button>
+                    <div className="flex flex-col gap-2 p-6 max-sm:p-1">
+                      <div className="flex flex-row items-center justify-between">
+                        {actionLabel === "Add win/lose" && (
+                          <Button variant="premium" type="submit">
+                            Add champion to game
+                          </Button>
+                        )}
+                        {secondaryAction && secondaryActionLabel && (
+                          <Button
+                            variant="outline"
+                            onClick={handleSecondaryAction}
+                          >
+                            {secondaryActionLabel}
+                          </Button>
+                        )}
+                        <Button onClick={handleSubmit}>{actionLabel}</Button>
+                      </div>
+                    </div>
                   </form>
                 </Form>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                <div className="flex flex-col gap-2 p-6">
-                  <div className="flex flex-row items-center w-full gap-4">
-                    <Button>Next</Button>
-                  </div>
-                  footer content
-                </div>
               </div>
             </div>
           </div>

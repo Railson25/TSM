@@ -10,13 +10,14 @@ import axios from "axios";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "../../../../components/ui/form";
 import { Input } from "../../../../components/ui/input";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useToast } from "../../../../components/ui/use-toast";
 
@@ -33,8 +34,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useGameData } from "@/context/game-data-context";
+
 import { GameModal, formSchema } from "../../_components/game-modal";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface GameFormProps {
   initialData: GameChampion | null;
@@ -66,19 +68,33 @@ export const GameForm = ({ initialData }: GameFormProps) => {
 
   const form = useFormContext();
 
-  // const form = useForm<z.infer<typeof formSchema>>({
-  //   resolver: zodResolver(formSchema),
-  //   defaultValues: {
-  //     role: "",
-  //     championId: "",
-  //     damage: 0,
-  //     gold: 0,
-  //     goldAtFiveMin: 0,
-  //     goldAtTenMin: 0,
-  //   },
-  // });
+  const onBack = () => {
+    setStep((value) => value - 1);
+  };
 
-  // useEffect(() => {}, [addToCreateAGame]);
+  const onNext = () => {
+    setStep((value) => value + 1);
+  };
+
+  const onSubmit = () => {
+    if (step !== STEPS.gameResult) {
+      return onNext();
+    }
+  };
+
+  const secondaryActionLabel = useMemo(() => {
+    if (step === STEPS.championInGame) {
+      return undefined;
+    }
+    return "back";
+  }, [step]);
+
+  const actionLabel = useMemo(() => {
+    if (step === STEPS.gameResult) {
+      return "Create a Game";
+    }
+    return "Add win/lose";
+  }, [step]);
 
   const onDelete = async () => {
     // try {
@@ -265,7 +281,7 @@ export const GameForm = ({ initialData }: GameFormProps) => {
       <>
         <FormField
           control={form.control}
-          name="damage"
+          name=""
           render={({ field }) => (
             <FormItem>
               <FormLabel>Game duration</FormLabel>
@@ -284,20 +300,41 @@ export const GameForm = ({ initialData }: GameFormProps) => {
         />
         <FormField
           control={form.control}
-          name="damage"
+          name=""
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Game duration</FormLabel>
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
               <FormControl>
-                <Input
-                  type="number"
-                  disabled={loading}
-                  {...field}
-                  {...form.register("damage", { valueAsNumber: true })}
-                  value={field.value.toString()}
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <FormMessage />
+              <div className="space-y-1 leading-none">
+                <FormLabel>Game win</FormLabel>
+                <FormDescription>
+                  Check this box if you win the game
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name=""
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>Game Lose</FormLabel>
+                <FormDescription>
+                  Check this box if you lose the game
+                </FormDescription>
+              </div>
             </FormItem>
           )}
         />
@@ -325,7 +362,14 @@ export const GameForm = ({ initialData }: GameFormProps) => {
         </Button>
       )} */}
 
-      <GameModal body={bodyContent} title="create champion in game" />
+      <GameModal
+        title="Complete all steps to create a game"
+        actionLabel={actionLabel}
+        secondaryActionLabel={secondaryActionLabel}
+        secondaryAction={step === STEPS.championInGame ? undefined : onBack}
+        body={bodyContent}
+        onSubmit={onSubmit}
+      />
     </>
   );
 };
