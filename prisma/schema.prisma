@@ -39,6 +39,8 @@ model Game {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   champions GameChampion[]
+  win Boolean @default(false)
+  lose Boolean @default(false)
 }
 
 

@@ -139,7 +139,20 @@ export function GameTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-start space-x-2 py-4">
-        <Button variant="default" size="lg" onClick={() => onSubmit(gameData)}>
+        <Button
+          variant="default"
+          size="lg"
+          onClick={() => {
+            if (gameData.length > 0) {
+              onSubmit(gameData);
+            } else {
+              toast({
+                variant: "destructive",
+                description: "You need at least 1 champion to create a game.",
+              });
+            }
+          }}
+        >
           Create
         </Button>
       </div>
