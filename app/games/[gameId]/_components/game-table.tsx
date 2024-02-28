@@ -22,10 +22,10 @@ import {
 import React, { useState } from "react";
 import { GameData, useGameData } from "@/context/game-data-context";
 
-import { GameFormValues } from "./game-form";
-import { useParams, useRouter } from "next/navigation";
-import axios from "axios";
-import { toast } from "@/components/ui/use-toast";
+import { ChampionFormValues } from "./champion-form";
+
+import { GameForm } from "./game-form";
+import { Modal } from "@/components/modal";
 
 console.log(GameTable);
 
@@ -38,13 +38,14 @@ export function GameTable<TData, TValue>({
   columns,
   searchKey,
 }: DataTableProps<TValue>) {
-  const params = useParams();
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const { gameData, clearGameData } = useGameData();
+  const { gameData } = useGameData();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState<ChampionFormValues[]>([]);
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
   const table = useReactTable({
     data: gameData,
     columns,
@@ -57,35 +58,14 @@ export function GameTable<TData, TValue>({
     },
   });
 
-  const onSubmit = async (data: GameFormValues[]) => {
-    try {
-      setLoading(true);
-      // if (data) {
-      //   console.log(data);
-      //   await axios.patch(`/api/games/${params.data}`, data);
-      //   toast({
-      //     variant: "success",
-      //     description: "Game updated",
-      //   });
-      // } else {
-      await axios.post(`/api/games`, data);
-      toast({
-        variant: "success",
-        description: "Game created",
-      });
-      // }
-      clearGameData();
-      router.push(`/games`);
-      router.refresh();
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        description: "Something went wrong!",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const abrirModal = () => {
+    setModalOpen(true);
   };
+
+  const fecharModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <div>
       <div className="rounded-md border mt-6">
@@ -139,10 +119,20 @@ export function GameTable<TData, TValue>({
         </Table>
       </div>
       <div className="flex items-center justify-start space-x-2 py-4">
-        <Button variant="default" size="lg" onClick={() => onSubmit(gameData)}>
+        <Button variant="default" size="lg" onClick={abrirModal}>
           Create
         </Button>
       </div>
+      {modalOpen && (
+        <Modal
+          title="Create game"
+          description="Adding correct data to your game"
+          isOpen={modalOpen}
+          onClose={fecharModal}
+        >
+          <GameForm />
+        </Modal>
+      )}
     </div>
   );
 }

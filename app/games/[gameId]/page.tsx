@@ -1,5 +1,5 @@
 import prismaDB from "@/lib/prismadb";
-import { GameForm } from "./_components/game-form";
+import { ChampionForm } from "./_components/champion-form";
 import { Separator } from "@/components/ui/separator";
 import { Header } from "@/components/header";
 import { GameTable } from "./_components/game-table";
@@ -19,7 +19,7 @@ const Game = async ({ params }: gameProps) => {
   return (
     <>
       <div>
-        <GameForm initialData={game} />
+        <ChampionForm initialData={game} />
       </div>
       <Separator className="mt-10 mb-3" />
       <Header title="Create Game" description="Add a new game" />

@@ -1,4 +1,4 @@
-import { GameFormValues } from "@/app/games/[gameId]/_components/game-form";
+import { ChampionFormValues } from "@/app/games/[gameId]/_components/champion-form";
 import prismaDB from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { ChampionRole } from "@prisma/client";
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
       data: {
         champions: {
           createMany: {
-            data: body.map((data: GameFormValues) => ({
+            data: body.map((data: ChampionFormValues) => ({
               damage: data.damage,
               gold: data.gold,
               goldAtFiveMin: data.goldAtFiveMin,
