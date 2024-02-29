@@ -34,7 +34,9 @@ interface GameFormData {
 }
 
 const formSchema = z.object({
-  gameDuration: z.number(),
+  gameDuration: z.number().min(1, {
+    message: "Game duration is required",
+  }),
   win: z.boolean().default(false).optional(),
   lose: z.boolean().default(false).optional(),
 });
@@ -55,22 +57,48 @@ export const GameForm = () => {
   const onSubmit = async (data: any) => {
     try {
       setLoading(true);
+
+      if (Array.isArray(gameData) && gameData.length === 0) {
+        toast({
+          variant: "destructive",
+          description: "Add champions to the game first",
+        });
+        return;
+      }
+
+      if (data.win && data.lose) {
+        toast({
+          variant: "destructive",
+          description: "Choose only one result for the match",
+        });
+        return;
+      }
+
+      if (!data.win && !data.lose) {
+        toast({
+          variant: "destructive",
+          description: "Choose the result of the match",
+        });
+        return;
+      }
+
       const postData: GameFormData = {
         ...data,
         ...gameData,
       };
-      console.log("HEEEEEEEEY", postData);
+
+      console.log(postData);
+      await axios.post(`/api/games`, postData);
+      toast({
+        variant: "success",
+        description: "Game created",
+      });
 
       clearGameData();
       form.reset();
-      //   await axios.post(`/api/games`, postData);
-      //   toast({
-      //     variant: "success",
-      //     description: "Game created",
-      //   });
 
-      //   router.push(`/games`);
-      //   router.refresh();
+      router.push(`/games`);
+      router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",

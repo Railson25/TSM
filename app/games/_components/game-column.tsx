@@ -5,12 +5,23 @@ import { ChampionActions } from "./game-actions";
 
 export type GameColumn = {
   id: string;
+  gameDuration: string;
+  win: boolean;
+  lose: boolean;
 };
 
 export const columns: ColumnDef<GameColumn>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "gameDuration",
     header: "Games",
+  },
+  {
+    accessorKey: "win",
+    header: "Game win",
+  },
+  {
+    accessorKey: "lose",
+    header: "Game lose",
   },
 
   {

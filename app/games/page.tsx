@@ -1,6 +1,7 @@
 import prismaDB from "@/lib/prismadb";
 import { GameClient } from "./_components/game-client";
 import { GameColumn } from "./_components/game-column";
+import { formatDurationGame } from "@/lib/utils";
 
 const Games = async () => {
   const games = await prismaDB.game.findMany({
@@ -11,6 +12,9 @@ const Games = async () => {
 
   const formattedGames: GameColumn[] = games.map((item) => ({
     id: item.id,
+    gameDuration: formatDurationGame(item.gameDuration),
+    lose: item.lose,
+    win: item.win,
   }));
 
   return (

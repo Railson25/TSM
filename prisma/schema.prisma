@@ -38,7 +38,7 @@ model Game {
   id String @id @default(cuid()) 
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-  champions GameChampion[]
+  champions GameChampion[] 
   gameDuration Int
   win Boolean @default(false)
   lose Boolean @default(false)
@@ -58,7 +58,7 @@ model GameChampion{
   champion Champion @relation(fields: [championId], references: [id])
 
   gameId String
-  game Game @relation(fields: [gameId], references: [id])
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
   @@unique([gameId, championId])
   @@index([gameId])
 }

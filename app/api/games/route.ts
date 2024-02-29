@@ -14,27 +14,37 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
-    if (!Array.isArray(body)) {
+    if (!body || typeof body !== "object") {
       return new NextResponse("Invalid request body", { status: 400 });
     }
 
+    const { win, lose, gameDuration, ...championData } = body;
+
+    const championArray: ChampionFormValues[] = Object.values(championData);
+
     const championIds = new Set<string>();
 
-    for (const data of body) {
-      const { championId } = data;
-      if (championIds.has(championId)) {
-        return new NextResponse(`Duplicate championId: ${championId}`, {
-          status: 400,
-        });
+    for (const dataKey in championData) {
+      // verificando se a chave atual é uma propriedade própria do objeto
+      if (Object.prototype.hasOwnProperty.call(championData, dataKey)) {
+        const data = championData[dataKey];
+        const { championId } = data;
+        if (championIds.has(championId)) {
+          return new NextResponse(`Duplicate championId: ${championId}`, {
+            status: 400,
+          });
+        }
+        championIds.add(championId);
       }
-      championIds.add(championId);
-    }
 
-    for (const data of body) {
-      const { championId, role, damage, gold, goldAtFiveMin, goldAtTenMin } =
-        data;
-      if (!championId || !role || !damage || !gold) {
-        return new NextResponse("Missing params of champion", { status: 400 });
+      for (const data of championArray) {
+        const { championId, role, damage, gold, goldAtFiveMin, goldAtTenMin } =
+          data;
+        if (!championId || !role || !damage || !gold) {
+          return new NextResponse("Missing params of champion", {
+            status: 400,
+          });
+        }
       }
     }
 
@@ -42,7 +52,7 @@ export async function POST(req: Request) {
       data: {
         champions: {
           createMany: {
-            data: body.map((data: ChampionFormValues) => ({
+            data: championArray.map((data: ChampionFormValues) => ({
               damage: data.damage,
               gold: data.gold,
               goldAtFiveMin: data.goldAtFiveMin,
@@ -52,6 +62,9 @@ export async function POST(req: Request) {
             })),
           },
         },
+        gameDuration,
+        win,
+        lose,
       },
     });
 
