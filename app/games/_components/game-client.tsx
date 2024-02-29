@@ -2,11 +2,12 @@
 
 import { Header } from "@/components/header";
 import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
+
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { GameColumn, columns } from "./game-column";
+import { GameDataTable } from "@/components/ui/game-data-table";
 
 interface GameClientProps {
   data: GameColumn[];
@@ -25,7 +26,7 @@ export const GameClient = ({ data }: GameClientProps) => {
         </Button>
       </div>
       <Separator />
-      <DataTable columns={columns} searchKey="games" data={data} />
+      <GameDataTable columns={columns} searchKey="games" data={data} />
     </>
   );
 };
