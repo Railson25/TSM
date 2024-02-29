@@ -1,10 +1,13 @@
 import { BarChart } from "@/components/bar-chart";
+import { RecentGames } from "@/components/recent-games";
 
 export default async function Home() {
   return (
-    <main className="">
-      <BarChart />
-      <div className="min-w-[400px]">recent games</div>
+    <main className="min-h-screen">
+      <div className="p-4 grid md:grid-cols-3 grid-cols-1 gap-4">
+        <BarChart />
+        <RecentGames />
+      </div>
     </main>
   );
 }
