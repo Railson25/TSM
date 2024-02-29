@@ -65,6 +65,7 @@ export async function POST(req: Request) {
         gameDuration,
         win,
         lose,
+        createdByUserId: userId,
       },
     });
 
@@ -76,7 +77,21 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
+  const { userId } = auth();
+  if (!userId) {
+    return new NextResponse("Unauthenticated", { status: 403 });
+  }
   try {
+    const gamesByUserId = await prismaDB.game.findFirst({
+      where: {
+        createdByUserId: userId,
+      },
+    });
+
+    if (!gamesByUserId) {
+      return new NextResponse("Unauthorized", { status: 403 });
+    }
+
     const games = await prismaDB.game.findMany({
       orderBy: {
         createdAt: "asc",

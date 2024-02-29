@@ -1,14 +1,17 @@
 "use client";
 
 import useGames from "@/hook/useGames";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { Game } from "@prisma/client";
-import { Check, Cigarette, X } from "lucide-react";
+import { Check, X } from "lucide-react";
+import { Skeleton } from "./ui/skeleton";
 
 export const RecentGames = () => {
   const { user } = useUser();
+  const { userId } = useAuth();
 
   const games: Game[] = useGames();
+  const gamesLoaded = games.length > 0;
 
   const formatGameDuration = (gameDate: Date): string => {
     const now = new Date();
@@ -22,45 +25,69 @@ export const RecentGames = () => {
     }
   };
 
+  const hasGames =
+    games.filter((game) => game.createdByUserId === userId).length > 0;
   return (
-    <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white ">
-      <h1 className="text-gray-800 font-bold text-center">Recent Games</h1>
-      <ul>
-        {games
-          .slice()
-          .reverse()
-          .slice(0, 7)
-          .map((game) => (
-            <li
-              key={game.id}
-              className="bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center cursor-pointer"
-            >
-              <div
-                className={`rounded-lg p-3 ${
-                  game.win ? "bg-emerald-100" : "bg-red-100"
-                }`}
-              >
-                {game.win ? (
-                  <Check className="text-emerald-800" />
-                ) : (
-                  <X className="text-red-800" />
-                )}
-              </div>
-              <div className="pl-4">
-                {game.win ? (
-                  <p className="text-emerald-600 font-bold">Victory</p>
-                ) : (
-                  <p className="text-red-600 font-bold">Defeat</p>
-                )}
+    <>
+      <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white ">
+        <h1 className="text-gray-800 font-bold text-center">Recent Games</h1>
+        {!gamesLoaded && (
+          <div className="w-full flex justify-center items-center h-full">
+            <Skeleton className="text-black   bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center">
+              Loading..
+            </Skeleton>
+          </div>
+        )}
+        {gamesLoaded && (
+          <>
+            {hasGames ? (
+              <ul>
+                {games
+                  .filter((game) => game.createdByUserId === userId)
+                  .slice()
+                  .reverse()
+                  .slice(0, 7)
+                  .map((game) => (
+                    <li
+                      key={game.id}
+                      className="bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center cursor-pointer"
+                    >
+                      <div
+                        className={`rounded-lg p-3 ${
+                          game.win ? "bg-emerald-100" : "bg-red-100"
+                        }`}
+                      >
+                        {game.win ? (
+                          <Check className="text-emerald-800" />
+                        ) : (
+                          <X className="text-red-800" />
+                        )}
+                      </div>
+                      <div className="pl-4">
+                        {game.win ? (
+                          <p className="text-emerald-600 font-bold">Victory</p>
+                        ) : (
+                          <p className="text-red-600 font-bold">Defeat</p>
+                        )}
 
-                <p className="text-gray-400 text-sm">{user?.firstName}</p>
+                        <p className="text-gray-400 text-sm">
+                          {user?.firstName}
+                        </p>
+                      </div>
+                      <p className="text-gray-800 lg:flex md:hidden absolute right-6 text-sm">
+                        {formatGameDuration(new Date(game.createdAt))}
+                      </p>
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <div className="w-full flex justify-center items-center h-full">
+                <p className="text-gray-800 ">You do not have games yet</p>
               </div>
-              <p className="text-gray-800 lg:flex md:hidden absolute right-6 text-sm">
-                {formatGameDuration(new Date(game.createdAt))}
-              </p>
-            </li>
-          ))}
-      </ul>
-    </div>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 };

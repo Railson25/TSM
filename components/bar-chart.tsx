@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import useGames from "@/hook/useGames";
 import { Game } from "@prisma/client";
+import { Skeleton } from "./ui/skeleton";
 
 ChartJs.register(
   CategoryScale,
@@ -26,6 +27,7 @@ ChartJs.register(
 
 export const BarChart = () => {
   const games: Game[] = useGames();
+  const gamesLoaded = games.length > 0;
 
   const [chartData, setChartData] = useState<any>({
     datasets: [],
@@ -77,8 +79,15 @@ export const BarChart = () => {
 
   return (
     <>
-      <div className=" w-full md:col-span-2 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
-        <Bar data={chartData} options={chartOptions} />
+      <div className=" w-full md:col-span-2 relative z-0 lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
+        {!gamesLoaded && (
+          <div className="w-full flex justify-center items-center h-full">
+            <Skeleton className="text-black   bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center">
+              Loading...
+            </Skeleton>
+          </div>
+        )}
+        {gamesLoaded && <Bar data={chartData} options={chartOptions} />}
       </div>
     </>
   );

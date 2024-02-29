@@ -42,6 +42,7 @@ model Game {
   gameDuration Int
   win Boolean @default(false)
   lose Boolean @default(false)
+  createdByUserId String
 }
 
 
