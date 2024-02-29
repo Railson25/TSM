@@ -87,7 +87,6 @@ export const GameForm = () => {
         ...gameData,
       };
 
-      console.log(postData);
       await axios.post(`/api/games`, postData);
       toast({
         variant: "success",
