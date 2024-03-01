@@ -13,7 +13,7 @@ export const Navbar = () => {
   const { userId } = useAuth();
 
   return (
-    <div className="sticky top-0 border border-b-purple-500/20 bg-secondary z-10">
+    <div className="sticky px-3 top-0 border border-b-purple-500/20 bg-secondary z-10">
       <Container>
         <div className="flex justify-between items-center">
           <div

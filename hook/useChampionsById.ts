@@ -21,3 +21,22 @@ const useChampionsById = (gameId: string) => {
 };
 
 export default useChampionsById;
+
+export const useChampionsInGames = () => {
+  const [champions, setChampions] = useState<GameChampion[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/championsInGame`);
+        const championsData = await response.json();
+        setChampions(championsData);
+      } catch (error) {
+        console.error("Error fetching champions in games:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  return champions;
+};

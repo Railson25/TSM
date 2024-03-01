@@ -1,4 +1,4 @@
-import { Game } from "@prisma/client";
+import { Game, GameChampion } from "@prisma/client";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -25,11 +25,7 @@ export const toMinutes = (value: number): number => {
   return Math.floor(totalMinutes);
 };
 
-export const calculateWinPercentage = (
-  games: Game[],
-  currentDate: Date,
-  lastMonthDate: Date
-) => {
+export const calculateWinPercentage = (games: Game[], currentDate: Date) => {
   const currentMonthGames = games.filter((game): game is Game => {
     const gameDate = new Date(game.createdAt);
     return (
@@ -38,32 +34,16 @@ export const calculateWinPercentage = (
     );
   });
 
-  const lastMonthGames = games.filter((game): game is Game => {
-    const gameDate = new Date(game.createdAt);
-    return (
-      gameDate.getMonth() === lastMonthDate.getMonth() &&
-      gameDate.getFullYear() === lastMonthDate.getFullYear()
-    );
-  });
-
   const currentMonthWinGames = currentMonthGames.filter((game) => game.win);
-  const lastMonthWinGames = lastMonthGames.filter((game) => game.win);
 
   const currentMonthWinPercentage =
     currentMonthGames.length > 0
       ? (currentMonthWinGames.length / currentMonthGames.length) * 100
       : 0;
 
-  const lastMonthWinPercentage =
-    lastMonthGames.length > 0
-      ? (lastMonthWinGames.length / lastMonthGames.length) * 100
-      : 0;
-
   return {
     currentMonthGames,
-    lastMonthGames,
     currentMonthWinPercentage,
-    lastMonthWinPercentage,
   };
 };
 
@@ -88,13 +68,7 @@ export const calculateLossPercentage = (
     );
   });
 
-  const currentMonthLossGames = currentMonthGames.filter((game) => !game.win);
   const lastMonthLossGames = lastMonthGames.filter((game) => !game.win);
-
-  const currentMonthLossPercentage =
-    currentMonthGames.length > 0
-      ? (currentMonthLossGames.length / currentMonthGames.length) * 100
-      : 0;
 
   const lastMonthLossPercentage =
     lastMonthGames.length > 0
@@ -102,9 +76,41 @@ export const calculateLossPercentage = (
       : 0;
 
   return {
-    currentMonthLossGames,
     lastMonthLossGames,
-    currentMonthLossPercentage,
     lastMonthLossPercentage,
   };
+};
+
+export const calculateDamageAverageForCurrentMonth = (
+  champions: GameChampion[],
+  games: Game[],
+  currentDate: Date
+): number => {
+  const currentMonthGames = games.filter((game) => {
+    const gameDate = new Date(game.createdAt);
+    return (
+      gameDate.getMonth() === currentDate.getMonth() &&
+      gameDate.getFullYear() === currentDate.getFullYear()
+    );
+  });
+
+  const currentMonthChampionIds = currentMonthGames.flatMap((game) =>
+    champions
+      .filter((champion) => champion.gameId === game.id)
+      .map((champion) => champion.championId)
+  );
+
+  const currentMonthChampions = champions.filter((champion) =>
+    currentMonthChampionIds.includes(champion.championId)
+  );
+
+  const totalDamage = currentMonthChampions.reduce(
+    (acc, champion) => acc + champion.damage,
+    0
+  );
+  const championCount = currentMonthChampionIds.length;
+
+  const averageDamage = championCount > 0 ? totalDamage / championCount : 0;
+
+  return averageDamage;
 };
