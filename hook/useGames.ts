@@ -1,9 +1,10 @@
 // useGames.js
 
+import { Game } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 const useGames = () => {
-  const [games, setGames] = useState([]);
+  const [games, setGames] = useState<Game[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

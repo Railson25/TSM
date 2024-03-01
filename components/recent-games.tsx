@@ -45,7 +45,7 @@ export const RecentGames = () => {
 
   return (
     <>
-      <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
+      <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white overflow-y-auto ">
         <h1 className="text-gray-800 font-bold text-center">Recent Games</h1>
         {!gamesLoaded && (
           <div className="w-full flex justify-center items-center h-full">
@@ -60,7 +60,6 @@ export const RecentGames = () => {
               <ul>
                 {games
                   .filter((game) => game.createdByUserId === userId)
-                  .slice()
                   .reverse()
                   .slice(0, 7)
                   .map((game) => (
