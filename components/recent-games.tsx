@@ -6,9 +6,24 @@ import { Game } from "@prisma/client";
 import { Check, X } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 
+import React, { useState } from "react";
+import { Modal } from "./modal";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
+
+import { RecentGameModal } from "./recent-game-modal";
+
 export const RecentGames = () => {
   const { user } = useUser();
   const { userId } = useAuth();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedGameId, setSelectedGameId] = useState<string>("");
 
   const games: Game[] = useGames();
   const gamesLoaded = games.length > 0;
@@ -27,9 +42,10 @@ export const RecentGames = () => {
 
   const hasGames =
     games.filter((game) => game.createdByUserId === userId).length > 0;
+
   return (
     <>
-      <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white ">
+      <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
         <h1 className="text-gray-800 font-bold text-center">Recent Games</h1>
         {!gamesLoaded && (
           <div className="w-full flex justify-center items-center h-full">
@@ -51,6 +67,10 @@ export const RecentGames = () => {
                     <li
                       key={game.id}
                       className="bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center cursor-pointer"
+                      onClick={() => {
+                        setSelectedGameId(game.id);
+                        setModalOpen(true);
+                      }}
                     >
                       <div
                         className={`rounded-lg p-3 ${
@@ -88,6 +108,31 @@ export const RecentGames = () => {
           </>
         )}
       </div>
+
+      <Modal
+        description=""
+        title=""
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        className="w-[300px] sm:w-[600px]  overflow-x-scroll sm:overflow-hidden"
+      >
+        {modalOpen && (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Result</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Damage</TableHead>
+                <TableHead>Gold</TableHead>
+                <TableHead className="text-right">duration</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <RecentGameModal selectedGameId={selectedGameId} />
+            </TableBody>
+          </Table>
+        )}
+      </Modal>
     </>
   );
 };

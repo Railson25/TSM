@@ -16,3 +16,10 @@ export const formatDurationGame = (duration: number): string => {
 
   return `${formattedHours} :${formattedMinutes}.${formattedSeconds}`;
 };
+
+export const toMinutes = (value: number): number => {
+  const minutes = Math.floor(value / 100);
+  const seconds = value % 100;
+  const totalMinutes = minutes + seconds / 60;
+  return Math.floor(totalMinutes);
+};

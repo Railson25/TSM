@@ -1,3 +1,4 @@
+import prismaDB from "@/lib/prismadb";
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
@@ -11,7 +12,7 @@ export async function GET(
       return new NextResponse("Champion Id is required", { status: 400 });
     }
 
-    const champion = await prismadb.champion.findUnique({
+    const champion = await prismaDB.champion.findUnique({
       where: {
         id: params.championId,
       },
@@ -50,7 +51,7 @@ export async function PATCH(
       return new NextResponse("Champion Id is required", { status: 400 });
     }
 
-    const champion = await prismadb.champion.updateMany({
+    const champion = await prismaDB.champion.updateMany({
       where: {
         id: params.championId,
       },
@@ -82,7 +83,7 @@ export async function DELETE(
       return new NextResponse("Champion Id is required", { status: 400 });
     }
 
-    const champion = await prismadb.champion.deleteMany({
+    const champion = await prismaDB.champion.deleteMany({
       where: {
         id: params.championId,
       },
