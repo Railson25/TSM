@@ -34,17 +34,18 @@ model Role {
   champion Champion[] @relation("ChampionRole")
 }
 
+
 model Game {
   id String @id @default(cuid()) 
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   champions GameChampion[] 
   gameDuration Int
+  version gameVersion[]
   win Boolean @default(false)
   lose Boolean @default(false)
   createdByUserId String
 }
-
 
 model GameChampion{
   id String @id @default(cuid())
@@ -62,4 +63,12 @@ model GameChampion{
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
   @@unique([gameId, championId])
   @@index([gameId])
+}
+
+
+model gameVersion {
+  id String @id @default(cuid())
+
+  versionId String
+  version Game @relation(fields: [versionId], references: [id], onDelete: Cascade)
 }

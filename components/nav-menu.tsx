@@ -39,6 +39,13 @@ export function NavMenu() {
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer flex gap-2 items-center"
+          onClick={() => router.push("/my-version")}
+        >
+          <User size={15} />
+          <span>My Version</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="cursor-pointer flex gap-2 items-center"
           onClick={() => router.push("/my-page")}
         >
           <User size={15} />
