@@ -48,6 +48,18 @@ export async function POST(req: Request) {
       }
     }
 
+    let defaultVersionId = null;
+
+    const versions = await prismaDB.gameVersion.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (versions.length === 0) {
+      return new NextResponse("Create a version first", { status: 404 });
+    }
+
+    defaultVersionId = versions[0].id;
+
     const game = await prismaDB.game.create({
       data: {
         champions: {
@@ -66,6 +78,7 @@ export async function POST(req: Request) {
         win,
         lose,
         createdByUserId: userId,
+        defaultVersionId,
       },
     });
 

@@ -7,8 +7,13 @@ import { Separator } from "@/components/ui/separator";
 
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { VersionColumn, columns } from "./version-column";
 
-export const VersionClient = () => {
+interface VersionClientProps {
+  data: VersionColumn[];
+}
+
+export const VersionClient = ({ data }: VersionClientProps) => {
   const router = useRouter();
 
   return (
@@ -21,7 +26,7 @@ export const VersionClient = () => {
         </Button>
       </div>
       <Separator />
-      <DataTable columns={[]} data={[]} searchKey="id" />
+      <DataTable columns={columns} data={data} searchKey="name" />
     </>
   );
 };

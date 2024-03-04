@@ -57,6 +57,15 @@ export const GameForm = () => {
   const onSubmit = async (data: any) => {
     try {
       setLoading(true);
+      const versions = await axios.get(`/api/my-version`);
+      if (versions.data.length === 0) {
+        toast({
+          variant: "destructive",
+          description:
+            "No version found. Create a version before creating a game",
+        });
+        return;
+      }
 
       if (Array.isArray(gameData) && gameData.length === 0) {
         toast({

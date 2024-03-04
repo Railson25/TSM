@@ -43,8 +43,6 @@ export const HomeCard = () => {
     currentDate
   );
 
-  console.log(champions);
-
   return (
     <>
       <Card>

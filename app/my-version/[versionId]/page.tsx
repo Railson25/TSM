@@ -1,12 +1,23 @@
 import { Header } from "@/components/header";
 import { VersionForm } from "./_components/version-form";
 import { AlertTriangle } from "lucide-react";
+import prismaDB from "@/lib/prismadb";
 
-const VersionPage = () => {
+interface VersionProps {
+  params: { versionId: string };
+}
+
+const VersionPage = async ({ params }: VersionProps) => {
+  const version = await prismaDB.gameVersion.findUnique({
+    where: {
+      id: params.versionId,
+    },
+  });
+
   return (
     <div className="flex w-full max-md:flex-col-reverse gap-x-8 px-3 pt-7">
       <div className="flex flex-col min-w-[50%]">
-        <VersionForm />
+        <VersionForm initialData={version} />
       </div>
       <div className="flex-1 flex flex-col max-md:mb-11 bg-[#272014] border border-[#433211] p-8 rounded-3xl">
         <div className="flex gap-x-4 items-center">

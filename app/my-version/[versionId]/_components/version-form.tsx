@@ -24,16 +24,21 @@ import { Button } from "../../../../components/ui/button";
 import { Header } from "@/components/header";
 import { AlertModal } from "@/components/alert-modal";
 import { useParams, useRouter } from "next/navigation";
+import { gameVersion } from "@prisma/client";
 
 const formSchema = z.object({
-  version: z.string().min(1, {
+  name: z.string().min(1, {
     message: "Version is required",
   }),
 });
 
+interface VersionFormProps {
+  initialData: gameVersion | null;
+}
+
 type VersionFormValues = z.infer<typeof formSchema>;
 
-export const VersionForm = () => {
+export const VersionForm = ({ initialData }: VersionFormProps) => {
   const params = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -43,24 +48,42 @@ export const VersionForm = () => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      version: "",
+    defaultValues: initialData || {
+      name: "",
     },
   });
 
   const onSubmit = async (data: VersionFormValues) => {
-    console.log(data);
+    try {
+      setLoading(true);
+
+      await axios.post(`/api/my-version`, data);
+      toast({
+        variant: "success",
+        description: "Version created",
+      });
+
+      router.push(`/my-version`);
+      router.refresh();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Something went wrong!",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/champions/${params.championId}`);
-      router.push(`/champions`);
+      await axios.delete(`/api/my-version/${params.versionId}`);
+      router.push(`/my-version`);
       router.refresh();
       toast({
         variant: "success",
-        description: "Champion updated",
+        description: "Version deleted",
       });
     } catch (error) {
       toast({
@@ -94,7 +117,7 @@ export const VersionForm = () => {
           <div className="max-w-96">
             <FormField
               control={form.control}
-              name="version"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Version name</FormLabel>
