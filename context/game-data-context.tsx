@@ -3,12 +3,22 @@
 import React, { createContext, useContext, useState } from "react";
 
 export interface GameData {
+  role: string;
+  championId: string;
   damage: number;
   gold: number;
   goldAtFiveMin: number | null;
   goldAtTenMin: number | null;
-  role: string;
-  championId: string;
+  damageByDeath: number | null;
+  damageSuffered: number | null;
+  epicMonster: number | null;
+  farmMonster: number | null;
+  goldDamageRate: number | null;
+  shieldOfCure: number | null;
+  teamParticipation: number | null;
+  toppledTowers: number | null;
+  troopScore: number | null;
+  wardNumber: number | null;
 }
 
 interface GameDataContextType {

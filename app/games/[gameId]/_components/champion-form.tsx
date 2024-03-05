@@ -53,6 +53,16 @@ const formSchema = z.object({
   championId: z.string().min(1, {
     message: "Champion is required",
   }),
+  damageByDeath: z.number().nullable(),
+  damageSuffered: z.number().nullable(),
+  teamParticipation: z.number().nullable(),
+  shieldOfCure: z.number().nullable(),
+  epicMonster: z.number().nullable(),
+  wardNumber: z.number().nullable(),
+  goldDamageRate: z.number().nullable(),
+  farmMonster: z.number().nullable(),
+  troopScore: z.number().nullable(),
+  toppledTowers: z.number().nullable(),
 });
 
 interface ChampionFormProps {
@@ -86,6 +96,16 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
       gold: 0,
       goldAtFiveMin: 0,
       goldAtTenMin: 0,
+      damageByDeath: 0,
+      damageSuffered: 0,
+      epicMonster: 0,
+      farmMonster: 0,
+      goldDamageRate: 0,
+      shieldOfCure: 0,
+      teamParticipation: 0,
+      toppledTowers: 0,
+      troopScore: 0,
+      wardNumber: 0,
     },
   });
 
@@ -290,10 +310,224 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="damageSuffered"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Damage suffered</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("damageSuffered", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="damageByDeath"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Damage by death</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("damageByDeath", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="teamParticipation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Team participation</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("teamParticipation", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="shieldOfCure"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Shield of cure</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("shieldOfCure", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="epicMonster"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Epic monster</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("epicMonster", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="wardNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ward number</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("wardNumber", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="goldDamageRate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Gold gold/damage</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("goldDamageRate", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="farmMonster"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Farm monster</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("farmMonster", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="troopScore"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Troop score</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("troopScore", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="toppledTowers"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Toppled towers</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      type="number"
+                      {...field}
+                      {...form.register("toppledTowers", {
+                        valueAsNumber: true,
+                      })}
+                      value={field.value?.toString()}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <Button disabled={loading} className="ml-auto" type="submit">
-            {action}
-          </Button>
+          <div>
+            <Button disabled={loading} className="ml-auto" type="submit">
+              {action}
+            </Button>
+            {/* TODO: checkbox */}
+            <button>MARK THIS IF IS A ENEMY</button>
+          </div>
         </form>
       </Form>
     </>

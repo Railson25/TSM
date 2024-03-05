@@ -22,8 +22,6 @@ import {
 import React, { useState } from "react";
 import { GameData, useGameData } from "@/context/game-data-context";
 
-import { ChampionFormValues } from "./champion-form";
-
 import { GameForm } from "./game-form";
 import { Modal } from "@/components/modal";
 
@@ -40,7 +38,6 @@ export function GameTable<TData, TValue>({
 }: DataTableProps<TValue>) {
   const { gameData } = useGameData();
   const [modalOpen, setModalOpen] = useState(false);
-  const [formData, setFormData] = useState<ChampionFormValues[]>([]);
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

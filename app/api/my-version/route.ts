@@ -17,6 +17,16 @@ export async function POST(req: Request, params: { versionId: string }) {
       return new NextResponse("Version name is required", { status: 400 });
     }
 
+    const existingVersion = await prismaDB.gameVersion.findFirst({
+      where: { name },
+    });
+
+    if (existingVersion) {
+      return new NextResponse("Version with this name already exists", {
+        status: 400,
+      });
+    }
+
     const newVersion = await prismaDB.gameVersion.create({
       data: {
         id: params.versionId,

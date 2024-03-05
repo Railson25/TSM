@@ -17,14 +17,14 @@ const Game = async ({ params }: gameProps) => {
   });
 
   return (
-    <>
+    <div className="px-4">
       <div>
         <ChampionForm initialData={game} />
       </div>
       <Separator className="mt-10 mb-3" />
       <Header title="Create Game" description="Add a new game" />
       <GameTable columns={columns} searchKey="game" />
-    </>
+    </div>
   );
 };
 

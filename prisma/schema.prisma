@@ -53,8 +53,8 @@ model Game {
   champions GameChampion[] 
 
   gameDuration String
-  totalKills Int?
-  totalDeath Int?
+  totalKills Int
+  totalDeath Int
 
   win Boolean @default(false)
   lose Boolean @default(false)

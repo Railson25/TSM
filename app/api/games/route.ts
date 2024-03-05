@@ -18,7 +18,8 @@ export async function POST(req: Request) {
       return new NextResponse("Invalid request body", { status: 400 });
     }
 
-    const { win, lose, gameDuration, ...championData } = body;
+    const { win, lose, gameDuration, totalKills, totalDeath, ...championData } =
+      body;
 
     const championArray: ChampionFormValues[] = Object.values(championData);
 
@@ -71,6 +72,16 @@ export async function POST(req: Request) {
               goldAtTenMin: data.goldAtTenMin,
               role: data.role as ChampionRole,
               championId: data.championId,
+              damageByDeath: data.damageByDeath,
+              damageSuffered: data.damageSuffered,
+              epicMonster: data.epicMonster,
+              farmMonster: data.farmMonster,
+              goldDamageRate: data.goldDamageRate,
+              shieldOfCure: data.shieldOfCure,
+              teamParticipation: data.teamParticipation,
+              toppledTowers: data.toppledTowers,
+              troopScore: data.troopScore,
+              wardNumber: data.wardNumber,
             })),
           },
         },
@@ -79,6 +90,8 @@ export async function POST(req: Request) {
         lose,
         createdByUserId: userId,
         defaultVersionId,
+        totalKills,
+        totalDeath,
       },
     });
 

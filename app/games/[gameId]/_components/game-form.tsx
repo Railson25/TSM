@@ -39,6 +39,12 @@ const formSchema = z.object({
   }),
   win: z.boolean().default(false).optional(),
   lose: z.boolean().default(false).optional(),
+  totalKills: z.number().min(0, {
+    message: "Game kill is required",
+  }),
+  totalDeath: z.number().min(0, {
+    message: "Game deaths is required",
+  }),
 });
 
 export const GameForm = () => {
@@ -51,6 +57,8 @@ export const GameForm = () => {
       gameDuration: "",
       win: false,
       lose: false,
+      totalDeath: 0,
+      totalKills: 0,
     },
   });
 
@@ -132,13 +140,46 @@ export const GameForm = () => {
               <FormItem>
                 <FormLabel>Game duration</FormLabel>
                 <FormControl>
+                  <Input type="time" {...field} value={field.value} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="totalKills"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Game kills</FormLabel>
+                <FormControl>
                   <Input
-                    type="time"
+                    type="number"
                     {...field}
                     value={field.value}
-                    // {...form.register("gameDuration", {
-                    //   valueAsNumber: true,
-                    // })}
+                    {...form.register("totalKills", {
+                      valueAsNumber: true,
+                    })}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="totalDeath"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Game deaths</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    {...field}
+                    value={field.value}
+                    {...form.register("totalDeath", {
+                      valueAsNumber: true,
+                    })}
                   />
                 </FormControl>
                 <FormMessage />

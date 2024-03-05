@@ -53,16 +53,30 @@ export const VersionForm = ({ initialData }: VersionFormProps) => {
     },
   });
 
-  const onSubmit = async (data: VersionFormValues) => {
+  const onSubmit = async () => {
     try {
       setLoading(true);
 
-      await axios.post(`/api/my-version`, data);
+      const existingVersion = await axios.get(
+        `/api/my-version?name=${form.getValues().name}`
+      );
+      const versions = existingVersion.data;
+      const exactMatch = versions.find(
+        (version: any) => version.name === form.getValues().name
+      );
+
+      if (exactMatch) {
+        toast({
+          variant: "destructive",
+          description: "Version with this name already exists",
+        });
+        return;
+      }
+      await axios.post(`/api/my-version`, form.getValues());
       toast({
         variant: "success",
         description: "Version created",
       });
-
       router.push(`/my-version`);
       router.refresh();
     } catch (error) {
@@ -75,34 +89,12 @@ export const VersionForm = ({ initialData }: VersionFormProps) => {
     }
   };
 
-  const onDelete = async () => {
-    try {
-      setLoading(true);
-      await axios.delete(`/api/my-version/${params.versionId}`);
-      router.push(`/my-version`);
-      router.refresh();
-      toast({
-        variant: "success",
-        description: "Version deleted",
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        description:
-          "Make sure you removed all games using this champion first.!",
-      });
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
-  };
-
   return (
     <>
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onConfirm={onDelete}
+        onConfirm={() => onSubmit()}
         loading={loading}
       />
       <div className="flex items-center justify-between">
@@ -133,11 +125,15 @@ export const VersionForm = ({ initialData }: VersionFormProps) => {
               )}
             />
           </div>
-          <Button disabled={loading} className="ml-auto" type="submit">
-            create
-          </Button>
         </form>
       </Form>
+      <Button
+        disabled={loading}
+        className="mt-10 max-w-96"
+        onClick={() => setOpen(true)}
+      >
+        create
+      </Button>
     </>
   );
 };
