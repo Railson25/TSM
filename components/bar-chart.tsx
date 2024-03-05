@@ -79,10 +79,10 @@ export const BarChart = () => {
 
   return (
     <>
-      <div className=" w-full md:col-span-2 relative z-0 lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white">
+      <div className=" w-full md:col-span-2 relative z-0 lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white dark:bg-[#020817]">
         {!gamesLoaded && (
           <div className="w-full flex justify-center items-center h-full">
-            <Skeleton className="text-black   bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center">
+            <Skeleton className="text-black dark:text-white  bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center">
               Loading...
             </Skeleton>
           </div>

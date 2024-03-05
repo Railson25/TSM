@@ -2,6 +2,7 @@ import { BarChart } from "@/components/bar-chart";
 import { Header } from "@/components/header";
 import { HomeCard } from "@/components/home-card";
 import { HorizontalChart } from "@/components/horizontal-chart";
+import { LineChart } from "@/components/line-chart";
 import { RecentGames } from "@/components/recent-games";
 import prismaDB from "@/lib/prismadb";
 
@@ -39,17 +40,31 @@ export default async function Home() {
         <RecentGames />
       </div>
 
-      <Header
-        title="Best champions"
-        description="The calculation is based on the duration of games, gold, damage per match, gold at 5, win and lose"
-        className="text-center mt-10 mb-10"
-      />
+      <div className="flex flex-col">
+        <Header
+          title="Best champions"
+          description="The calculation is based on more than 20 different parameters!"
+          className="text-center mt-10 mb-10"
+        />
 
-      <HorizontalChart
-        championInGame={championsInGame}
-        games={games}
-        champions={champions}
-      />
+        <HorizontalChart
+          championInGame={championsInGame}
+          games={games}
+          champions={champions}
+        />
+
+        <Header
+          title="Average damage"
+          description="This graph will calculate the average damage of each champion individually according to the number of matches they play."
+          className="text-center mt-10 mb-10"
+        />
+
+        <LineChart
+          championInGame={championsInGame}
+          champions={champions}
+          games={games}
+        />
+      </div>
     </main>
   );
 }

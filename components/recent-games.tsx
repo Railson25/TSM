@@ -45,11 +45,13 @@ export const RecentGames = () => {
 
   return (
     <>
-      <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white overflow-y-auto ">
-        <h1 className="text-gray-800 font-bold text-center">Recent Games</h1>
+      <div className="w-full col-span-1 relative lg:h-[70vh] h-[50vh] m-auto p-4 border rounded-lg bg-white dark:bg-[#020817] overflow-y-auto ">
+        <h1 className="text-gray-800 dark:text-white font-bold text-center">
+          Recent Games
+        </h1>
         {!gamesLoaded && (
           <div className="w-full flex justify-center items-center h-full">
-            <Skeleton className="text-black   bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center">
+            <Skeleton className="text-black dark:text-white dark:bg-[#020817] bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center">
               Loading..
             </Skeleton>
           </div>
@@ -65,7 +67,7 @@ export const RecentGames = () => {
                   .map((game) => (
                     <li
                       key={game.id}
-                      className="bg-gray-50 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center cursor-pointer"
+                      className="bg-gray-50 dark:bg-blue-950/45 hover:bg-gray-100 rounded-lg my-3 p-2 flex items-center cursor-pointer"
                       onClick={() => {
                         setSelectedGameId(game.id);
                         setModalOpen(true);
@@ -73,13 +75,15 @@ export const RecentGames = () => {
                     >
                       <div
                         className={`rounded-lg p-3 ${
-                          game.win ? "bg-emerald-100" : "bg-red-100"
+                          game.win
+                            ? "bg-emerald-100 dark:bg-emerald-600"
+                            : "bg-red-100 dark:bg-red-600"
                         }`}
                       >
                         {game.win ? (
-                          <Check className="text-emerald-800" />
+                          <Check className="text-emerald-800 dark:text-emerald-100" />
                         ) : (
-                          <X className="text-red-800" />
+                          <X className="text-red-800 dark:text-red-100" />
                         )}
                       </div>
                       <div className="pl-4">

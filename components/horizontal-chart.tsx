@@ -120,7 +120,7 @@ export const HorizontalChart = ({
   };
 
   return (
-    <div>
+    <div className="w-full">
       <Bar data={data} options={options} />
     </div>
   );
