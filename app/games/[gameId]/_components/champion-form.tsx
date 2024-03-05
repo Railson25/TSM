@@ -10,6 +10,7 @@ import axios from "axios";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -37,6 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useGameData } from "@/context/game-data-context";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const formSchema = z.object({
   damage: z.number().min(1, {
@@ -63,6 +65,7 @@ const formSchema = z.object({
   farmMonster: z.number().nullable(),
   troopScore: z.number().nullable(),
   toppledTowers: z.number().nullable(),
+  isOpponent: z.boolean().optional(),
 });
 
 interface ChampionFormProps {
@@ -106,6 +109,7 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
       toppledTowers: 0,
       troopScore: 0,
       wardNumber: 0,
+      isOpponent: false,
     },
   });
 
@@ -520,14 +524,34 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="isOpponent"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-orange-600 font-extrabold">
+                      Opponent champion?
+                    </FormLabel>
+                    <FormDescription>
+                      Mark this field if are an opposing champion!
+                    </FormDescription>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <div>
-            <Button disabled={loading} className="ml-auto" type="submit">
-              {action}
-            </Button>
-            {/* TODO: checkbox */}
-            <button>MARK THIS IF IS A ENEMY</button>
-          </div>
+
+          <Button disabled={loading} className="ml-auto" type="submit">
+            {action}
+          </Button>
         </form>
       </Form>
     </>

@@ -19,6 +19,7 @@ export interface GameData {
   toppledTowers: number | null;
   troopScore: number | null;
   wardNumber: number | null;
+  isOpponent?: Boolean | undefined;
 }
 
 interface GameDataContextType {

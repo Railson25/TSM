@@ -82,6 +82,8 @@ model GameChampion{
   troopScore Int?
   toppledTowers Int?
 
+  isOpponent Boolean @default(false)
+
   role ChampionRole
   championId String
   champion Champion @relation(fields: [championId], references: [id])

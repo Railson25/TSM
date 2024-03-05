@@ -47,12 +47,38 @@ export const HorizontalChart = ({
     const normalizedDamage = avgDamage / 10000;
     const normalizedGoldAtFiveMin = avgGoldAtFiveMin / 2000;
 
+    const avgTotalKills =
+      games.reduce((acc, game) => acc + game.totalKills, 0) / games.length;
+    const avgTotalDeaths =
+      games.reduce((acc, game) => acc + game.totalDeath, 0) / games.length;
+
+    const maxTotalKills = Math.max(...games.map((game) => game.totalKills), 1);
+    const maxTotalDeaths = Math.max(...games.map((game) => game.totalDeath), 1);
+
+    const normalizedTotalKills = avgTotalKills / maxTotalKills;
+    const normalizedTotalDeaths = avgTotalDeaths / maxTotalDeaths;
+
     const score =
-      0.2 * normalizedGameDuration +
-      0.3 * normalizedGold +
-      0.3 * normalizedDamage +
-      0.1 * normalizedGoldAtFiveMin +
-      0.1;
+      0.15 * normalizedGameDuration +
+      0.2 * normalizedGold +
+      0.25 * normalizedDamage +
+      0.05 * normalizedGoldAtFiveMin +
+      0.05 * normalizedGoldAtFiveMin +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.05 * (1 / championGames.length) +
+      0.1 * normalizedTotalKills +
+      0.1 * normalizedTotalDeaths;
 
     return score;
   };

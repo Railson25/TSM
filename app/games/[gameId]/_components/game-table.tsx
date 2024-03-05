@@ -24,6 +24,7 @@ import { GameData, useGameData } from "@/context/game-data-context";
 
 import { GameForm } from "./game-form";
 import { Modal } from "@/components/modal";
+import { toast } from "@/components/ui/use-toast";
 
 console.log(GameTable);
 
@@ -56,6 +57,19 @@ export function GameTable<TData, TValue>({
   });
 
   const abrirModal = () => {
+    const myChampions = gameData.filter((champion) => !champion.isOpponent);
+    const opponentChampions = gameData.filter(
+      (champion) => champion.isOpponent
+    );
+
+    if (myChampions.length !== opponentChampions.length) {
+      toast({
+        variant: "destructive",
+        description:
+          "You must send the same number of champions from your team and the opposing team.",
+      });
+      return;
+    }
     setModalOpen(true);
   };
 
