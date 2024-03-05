@@ -13,7 +13,7 @@ const Champion = async ({ params }: ChampionProps) => {
   });
 
   return (
-    <div>
+    <div className="px-4">
       <ChampionForm initialData={champion} />
     </div>
   );

@@ -23,15 +23,15 @@ model Champion {
   name String
   imageURL String
 
-  baseDamage Int
-  baseLife Int
-  baseMana Int
-  regenLife Int
-  regenMana Int
-  armor Int
-  magicArmor Int
+  baseDamage String
+  baseLife String
+  baseMana String
+  regenLife String
+  regenMana String
+  armor String
+  magicArmor String
   attackSpeed String
-  moveSpeed Int
+  moveSpeed String
 
   roles Role[] @relation("ChampionRole")
   createdAt DateTime @default(now())

@@ -7,7 +7,20 @@ export async function POST(req: Request, params: { championId: string }) {
     const { userId } = auth();
     const body = await req.json();
 
-    const { name, imageURL } = body;
+    const {
+      name,
+      imageURL,
+      roles,
+      baseDamage,
+      baseLife,
+      baseMana,
+      armor,
+      magicArmor,
+      attackSpeed,
+      moveSpeed,
+      regenLife,
+      regenMana,
+    } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -18,13 +31,43 @@ export async function POST(req: Request, params: { championId: string }) {
     }
 
     if (!imageURL) {
-      return new NextResponse("Name is required", { status: 400 });
+      return new NextResponse("ImageURL is required", { status: 400 });
+    }
+
+    if (!roles || !Array.isArray(roles) || roles.length === 0) {
+      return new NextResponse("At least one role is required", { status: 400 });
+    }
+
+    if (
+      !baseDamage ||
+      !baseLife ||
+      !baseMana ||
+      !armor ||
+      !magicArmor ||
+      !attackSpeed ||
+      !moveSpeed ||
+      !regenLife ||
+      !regenMana
+    ) {
+      return new NextResponse("All stats are required", { status: 400 });
     }
 
     const champion = await prismaDB.champion.create({
       data: {
         name,
         imageURL,
+        baseDamage,
+        baseLife,
+        baseMana,
+        armor,
+        magicArmor,
+        attackSpeed,
+        moveSpeed,
+        regenLife,
+        regenMana,
+        roles: {
+          create: roles.map((role) => ({ role: role })),
+        },
         id: params.championId,
       },
     });

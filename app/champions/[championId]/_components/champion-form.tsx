@@ -27,14 +27,36 @@ import { Separator } from "@/components/ui/separator";
 import { Header } from "@/components/header";
 import { AlertModal } from "@/components/alert-modal";
 import { useParams, useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { frameworks } from "@/components/select-role";
 
 const formSchema = z.object({
-  name: z.string().min(3, {
-    message: "Name must be at least 3 characters long",
-  }),
   imageURL: z.string().min(1, {
     message: "Image is required",
   }),
+  name: z.string().min(3, {
+    message: "Name must be at least 3 characters long",
+  }),
+  roles: z.string().min(1, {
+    message: "Champion is required",
+  }),
+  baseDamage: z.string().min(1, { message: "Base damage is required" }),
+  baseLife: z.string().min(1, { message: "Base life is required" }),
+  baseMana: z.string().min(1, { message: "Base mana is required" }),
+  regenLife: z.string().min(1, { message: "Life regeneration is required" }),
+  regenMana: z.string().min(1, { message: "Mana regeneration is required" }),
+  armor: z.string().min(1, { message: "Armor is required" }),
+  magicArmor: z.string().min(1, { message: "Magic armor is required" }),
+  attackSpeed: z.string().min(1, { message: "Attack speed is required" }),
+  moveSpeed: z.string().min(1, { message: "Move speed is required" }),
 });
 
 interface ChampionFormProps {
@@ -45,6 +67,8 @@ type ChampionFormValues = z.infer<typeof formSchema>;
 export const ChampionForm = ({ initialData }: ChampionFormProps) => {
   const params = useParams();
   const router = useRouter();
+
+  const [champions, setChampions] = useState<Champion[]>([]);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -52,28 +76,43 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
 
   const title = initialData ? "Edit champion" : "Create champion";
   const description = initialData ? "Edit a champion" : "Add a new champion";
-  const toastMessage = initialData ? "Champion updated." : "Champion created.";
+
   const action = initialData ? "Save changes" : "Create";
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
-      name: "",
       imageURL: "",
+      name: "",
+      roles: "",
+      baseDamage: "",
+      baseLife: "",
+      baseMana: "",
+      armor: "",
+      magicArmor: "",
+      attackSpeed: "",
+      moveSpeed: "",
+      regenLife: "",
+      regenMana: "",
     },
   });
 
   const onSubmit = async (data: ChampionFormValues) => {
     try {
       setLoading(true);
+
+      const roles = [data.roles];
+
+      const newData = { ...data, roles };
+
       if (initialData) {
-        await axios.patch(`/api/champions/${params.championId}`, data);
+        await axios.patch(`/api/champions/${params.championId}`, newData);
         toast({
           variant: "success",
           description: "Champion updated",
         });
       } else {
-        await axios.post(`/api/champions`, data);
+        await axios.post(`/api/champions`, newData);
         toast({
           variant: "success",
           description: "Champion created",
@@ -110,6 +149,15 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
     } finally {
       setLoading(false);
       setOpen(false);
+    }
+  };
+
+  const handleClick = async () => {
+    try {
+      const response = await axios.get("/api/champions");
+      setChampions(response.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -158,7 +206,7 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             <FormField
               control={form.control}
               name="name"
@@ -169,6 +217,194 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
                     <Input
                       disabled={loading}
                       placeholder="Champion Name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="roles"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Champion Role</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      onOpenChange={handleClick}
+                      value={field.value}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Role</SelectLabel>
+
+                          {frameworks.map((champion) => (
+                            <SelectItem
+                              value={champion.label}
+                              key={champion.value}
+                            >
+                              {champion.value}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="baseDamage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Base damage</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Champion Damage"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="baseLife"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Base life</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Champion life"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="baseMana"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Base mana</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Champion mana"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="armor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Armor</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Champion armor"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="magicArmor"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Magic armor</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Champion magic armor"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="attackSpeed"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Attack speed</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Champion attack speed"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="moveSpeed"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Move speed</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Champion move speed"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="regenLife"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Life regeneration</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Champion life regeneration"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="regenMana"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mana regeneration</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Champion mana regeneration"
                       {...field}
                     />
                   </FormControl>
