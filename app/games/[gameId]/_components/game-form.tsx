@@ -28,13 +28,13 @@ interface GameFormData {
   goldAtTenMin: number | null;
   role: string;
   championId: string;
-  gameDuration: number;
+  gameDuration: string;
   win: boolean;
   lose: boolean;
 }
 
 const formSchema = z.object({
-  gameDuration: z.number().min(1, {
+  gameDuration: z.string().min(1, {
     message: "Game duration is required",
   }),
   win: z.boolean().default(false).optional(),
@@ -48,7 +48,7 @@ export const GameForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      gameDuration: 0,
+      gameDuration: "",
       win: false,
       lose: false,
     },
@@ -57,6 +57,7 @@ export const GameForm = () => {
   const onSubmit = async (data: any) => {
     try {
       setLoading(true);
+      console.log(data);
       const versions = await axios.get(`/api/my-version`);
       if (versions.data.length === 0) {
         toast({
@@ -132,12 +133,12 @@ export const GameForm = () => {
                 <FormLabel>Game duration</FormLabel>
                 <FormControl>
                   <Input
-                    type="number"
+                    type="time"
                     {...field}
-                    value={field.value.toString()}
-                    {...form.register("gameDuration", {
-                      valueAsNumber: true,
-                    })}
+                    value={field.value}
+                    // {...form.register("gameDuration", {
+                    //   valueAsNumber: true,
+                    // })}
                   />
                 </FormControl>
                 <FormMessage />

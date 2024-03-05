@@ -28,7 +28,7 @@ export const RecentGameModal = ({ selectedGameId }: RecentGameModalProps) => {
                 <TableCell>{champion.damage}</TableCell>
                 <TableCell>{champion.gold}</TableCell>
                 <TableCell className="font-medium">
-                  {toMinutes(game.gameDuration)} - Min
+                  {game.gameDuration} - Min
                 </TableCell>
               </TableRow>
             ))

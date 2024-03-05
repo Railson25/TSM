@@ -22,6 +22,17 @@ model Champion {
   id String @id @default(cuid()) 
   name String
   imageURL String
+
+  baseDamage Int
+  baseLife Int
+  baseMana Int
+  regenLife Int
+  regenMana Int
+  armor Int
+  magicArmor Int
+  attackSpeed String
+  moveSpeed Int
+
   roles Role[] @relation("ChampionRole")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -40,7 +51,11 @@ model Game {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   champions GameChampion[] 
-  gameDuration Int
+
+  gameDuration String
+  totalKills Int?
+  totalDeath Int?
+
   win Boolean @default(false)
   lose Boolean @default(false)
   createdByUserId String
@@ -51,16 +66,25 @@ model Game {
 
 model GameChampion{
   id String @id @default(cuid())
+
   damage Int
   gold Int
   goldAtFiveMin  Int?
   goldAtTenMin Int?
+  damageByDeath Int?
+  damageSuffered Int?
+  teamParticipation Int?
+  shieldOfCure  Int?
+  epicMonster Int?
+  wardNumber Int?
+  goldDamageRate Int?
+  farmMonster Int?
+  troopScore Int?
+  toppledTowers Int?
 
   role ChampionRole
-
   championId String
   champion Champion @relation(fields: [championId], references: [id])
-
   gameId String
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
   @@unique([gameId, championId])
