@@ -24,33 +24,53 @@ export const HorizontalChart = ({
   champions,
   championInGame,
 }: HorizontalChartProps) => {
+  //Calculate the average of an array of numbers
+  const calculateAverage = (values: number[]): number => {
+    return (
+      values.reduce((accumulator, value) => accumulator + value, 0) /
+      values.length
+    );
+  };
+
+  //Normalizing a value so they can be compared!
+  const getNormalizedValue = (value: number, maxValue: number): number => {
+    return value / maxValue;
+  };
+
   const calculateChampionScore = (championId: string) => {
     const championGames = championInGame.filter(
       (game) => game.championId === championId
     );
 
-    const avgGameDuration =
-      games.reduce((acc, game) => acc + parseInt(game.gameDuration), 0) /
-      games.length;
-    const avgGold =
-      championGames.reduce((acc, game) => acc + game.gold, 0) /
-      championGames.length;
-    const avgDamage =
-      championGames.reduce((acc, game) => acc + game.damage, 0) /
-      championGames.length;
-    const avgGoldAtFiveMin =
-      championGames.reduce((acc, game) => acc + (game.goldAtFiveMin ?? 0), 0) /
-      championGames.length;
+    const getAverage = (property: string) => {
+      return (
+        championInGame.reduce(
+          (accumulator, game: any) => accumulator + game[property],
+          0
+        ) / championGames.length
+      );
+    };
 
-    const normalizedGameDuration = 1 - avgGameDuration / 60;
-    const normalizedGold = avgGold / 10000;
-    const normalizedDamage = avgDamage / 10000;
-    const normalizedGoldAtFiveMin = avgGoldAtFiveMin / 2000;
+    const avgGameDuration = calculateAverage(
+      games.map((game) => parseInt(game.gameDuration))
+    );
 
-    const avgTotalKills =
-      games.reduce((acc, game) => acc + game.totalKills, 0) / games.length;
-    const avgTotalDeaths =
-      games.reduce((acc, game) => acc + game.totalDeath, 0) / games.length;
+    const avgGold = getAverage("gold");
+    const avgDamage = getAverage("damage");
+    const avgGoldAtFiveMin = getAverage("goldAtFiveMin") || 0;
+
+    const normalizedGameDuration = getNormalizedValue(avgGameDuration, 60);
+    const normalizedGold = getNormalizedValue(avgGold, 100000);
+    const normalizedDamage = getNormalizedValue(avgDamage, 200000);
+    const normalizedGoldAtFiveMin = getNormalizedValue(avgGoldAtFiveMin, 15000);
+
+    const avgTotalKills = calculateAverage(
+      games.map((game) => game.totalKills)
+    );
+
+    const avgTotalDeaths = calculateAverage(
+      games.map((game) => game.totalDeath)
+    );
 
     const maxTotalKills = Math.max(...games.map((game) => game.totalKills), 1);
     const maxTotalDeaths = Math.max(...games.map((game) => game.totalDeath), 1);
@@ -58,37 +78,30 @@ export const HorizontalChart = ({
     const normalizedTotalKills = avgTotalKills / maxTotalKills;
     const normalizedTotalDeaths = avgTotalDeaths / maxTotalDeaths;
 
+    const repeatedTerm = 0.05 * (1 / championGames.length);
+
     const score =
       0.15 * normalizedGameDuration +
       0.2 * normalizedGold +
       0.25 * normalizedDamage +
       0.05 * normalizedGoldAtFiveMin +
       0.05 * normalizedGoldAtFiveMin +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.05 * (1 / championGames.length) +
-      0.1 * normalizedTotalKills +
-      0.1 * normalizedTotalDeaths;
+      15 * repeatedTerm;
+    0.1 * normalizedTotalKills + 0.1 * normalizedTotalDeaths;
 
     return score;
   };
 
   const championAverages = Object.values(
     championInGame.reduce((groups, champion) => {
-      if (!groups[champion.championId]) {
-        groups[champion.championId] = [];
+      const { championId } = champion;
+
+      if (!groups[championId]) {
+        groups[championId] = [];
       }
-      groups[champion.championId].push(champion);
+
+      groups[championId].push(champion);
+
       return groups;
     }, {} as Record<string, GameChampion[]>)
   ).map((group) => {
