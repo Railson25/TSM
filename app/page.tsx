@@ -1,4 +1,7 @@
+import { AverageDamage } from "@/components/average-damage";
+import { AverageDamageCompareRandom } from "@/components/average-damage-compare-random";
 import { BarChart } from "@/components/bar-chart";
+import { DamageSelect } from "@/components/damage-select";
 import { Header } from "@/components/header";
 import { HomeCard } from "@/components/home-card";
 import { HorizontalChart } from "@/components/horizontal-chart";
@@ -59,7 +62,19 @@ export default async function Home() {
           className="text-center mt-10 mb-10"
         />
 
-        <LineChart
+        <AverageDamage
+          championInGame={championsInGame}
+          champions={champions}
+          games={games}
+        />
+
+        <Header
+          title="Average damage compare Random"
+          description="This graph will calculate the average damage of each champion individually according to the number of matches they play."
+          className="text-center mt-10 mb-10"
+        />
+
+        <AverageDamageCompareRandom
           championInGame={championsInGame}
           champions={champions}
           games={games}

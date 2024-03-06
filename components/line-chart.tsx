@@ -14,7 +14,6 @@ import {
   Tooltip,
   Filler,
 } from "chart.js";
-import { useState } from "react";
 
 ChartJs.register(
   LineElement,
@@ -30,17 +29,28 @@ interface LineChartProps {
   championInGame: GameChampion[];
   games: Game[];
   champions: Champion[];
+  selectedRole: string;
 }
 
 export const LineChart = ({
   championInGame,
   games,
   champions,
+  selectedRole,
 }: LineChartProps) => {
+  const filteredChampions = selectedRole
+    ? (championInGame
+        .filter((cig) => cig.role === selectedRole)
+        .map((cig) =>
+          champions.find((champion) => champion.id === cig.championId)
+        )
+        .filter((champion) => champion !== undefined) as Champion[])
+    : [];
+
   const groupedData = games.reduce((acc: any, game) => {
     const month = new Date(game.createdAt).getMonth();
     championInGame.forEach((cig) => {
-      if (cig.gameId === game.id) {
+      if (cig.gameId === game.id && cig.role === selectedRole) {
         const championId = cig.championId;
         acc[championId] = acc[championId] || {};
         acc[championId][month] = acc[championId][month] || {
@@ -84,19 +94,23 @@ export const LineChart = ({
 
   const data = {
     labels: months,
-    datasets: averageDamageData.map((championData) => ({
-      label:
-        champions.find((champion) => champion.id === championData.championId)
-          ?.name || "Unknown",
-      data: championData.data,
-      borderColor: "#" + Math.floor(Math.random() * 16777215).toString(16),
-      borderWidth: 3,
-      pointBorderColor: "#" + Math.floor(Math.random() * 16777215).toString(16),
-      pointBorderWidth: 3,
-      tension: 0.5,
-      fill: true,
-      backgroundColor: "rgba(97, 219, 251, 0.4)",
-    })),
+    datasets: averageDamageData.map((championData) => {
+      const champion = filteredChampions.find(
+        (champion) => champion.id === championData.championId
+      );
+      return {
+        label: champion ? champion.name : "Unknown",
+        data: championData.data,
+        borderColor: "#" + Math.floor(Math.random() * 16777215).toString(16),
+        borderWidth: 3,
+        pointBorderColor:
+          "#" + Math.floor(Math.random() * 16777215).toString(16),
+        pointBorderWidth: 3,
+        tension: 0.5,
+        fill: true,
+        backgroundColor: "rgba(97, 219, 251, 0.4)",
+      };
+    }),
   };
 
   const options = {

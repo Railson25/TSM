@@ -14,7 +14,9 @@ interface DamageSelectProps {
   onChangeRole: (role: string) => void;
 }
 
-export const DamageSelect = ({ onChangeRole }: DamageSelectProps) => {
+export const DamageSelectCompareRandom = ({
+  onChangeRole,
+}: DamageSelectProps) => {
   return (
     <Select onValueChange={onChangeRole}>
       <SelectTrigger className="w-[180px] mb-5">
