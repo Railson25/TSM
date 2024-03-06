@@ -7,6 +7,7 @@ import { HomeCard } from "@/components/home-card";
 import { HorizontalChart } from "@/components/horizontal-chart";
 import { LineChart } from "@/components/line-chart";
 import { RecentGames } from "@/components/recent-games";
+import { Team } from "@/components/team";
 import prismaDB from "@/lib/prismadb";
 
 export default async function Home() {
@@ -80,6 +81,11 @@ export default async function Home() {
           games={games}
         />
       </div>
+      <Team />
+      <p className="italic text-sm text-center">
+        Developed by <span className="font-bold">Railson Santiago</span>. All
+        rights reserved ©
+      </p>
     </main>
   );
 }
