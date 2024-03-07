@@ -21,10 +21,13 @@ export const VersionClient = ({ data }: VersionClientProps) => {
     <>
       <div className="flex items-center justify-between">
         <Header title="Versions" description="Manage version to your game" />
+
+        {/* <Protect permission="admin"> */}
         <Button onClick={() => router.push("/my-version/new")}>
           <Plus className="mr-2 h-4 w-4" />
           Add new
         </Button>
+        {/* </Protect> */}
       </div>
       <Separator />
       <DataTable columns={columns} data={data} searchKey="name" />

@@ -82,6 +82,7 @@ export async function POST(req: Request) {
               toppledTowers: data.toppledTowers,
               troopScore: data.troopScore,
               wardNumber: data.wardNumber,
+              isOpponent: data.isOpponent,
             })),
           },
         },
@@ -104,9 +105,9 @@ export async function POST(req: Request) {
 
 export async function GET() {
   const { userId } = auth();
-  // if (!userId) {
-  //   return new NextResponse("Unauthenticated", { status: 403 });
-  // }
+  if (!userId) {
+    return new NextResponse("Unauthenticated", { status: 403 });
+  }
   try {
     const gamesByUserId = await prismaDB.game.findFirst({
       where: {
@@ -114,9 +115,9 @@ export async function GET() {
       },
     });
 
-    if (!gamesByUserId) {
-      return new NextResponse("Unauthorized", { status: 403 });
-    }
+    // if (!gamesByUserId) {
+    //   return new NextResponse("Unauthorized", { status: 403 });
+    // }
 
     const games = await prismaDB.game.findMany({
       orderBy: {

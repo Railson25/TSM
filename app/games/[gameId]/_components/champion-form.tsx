@@ -117,7 +117,6 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
     try {
       formSchema.parse(data);
       addToGameData(data);
-      console.log(data);
       form.reset();
     } catch (error: any) {
       if (
