@@ -53,7 +53,9 @@ export const VersionForm = ({ initialData }: VersionFormProps) => {
     },
   });
 
-  const onSubmit = async () => {
+  const action = initialData ? "Save changes" : "Create";
+
+  const onSubmit = async (data: VersionFormValues) => {
     try {
       setLoading(true);
 
@@ -72,11 +74,19 @@ export const VersionForm = ({ initialData }: VersionFormProps) => {
         });
         return;
       }
-      await axios.post(`/api/my-version`, form.getValues());
-      toast({
-        variant: "success",
-        description: "Version created",
-      });
+      if (initialData) {
+        await axios.patch(`/api/my-version/${params.versionId}`, data);
+        toast({
+          variant: "success",
+          description: "Version updated",
+        });
+      } else {
+        await axios.post(`/api/my-version`, form.getValues());
+        toast({
+          variant: "success",
+          description: "Version created",
+        });
+      }
       router.push(`/my-version`);
       router.refresh();
     } catch (error) {
@@ -94,7 +104,7 @@ export const VersionForm = ({ initialData }: VersionFormProps) => {
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onConfirm={() => onSubmit()}
+        onConfirm={() => onSubmit(form.getValues())}
         loading={loading}
       />
       <div className="flex items-center justify-between">
@@ -132,7 +142,7 @@ export const VersionForm = ({ initialData }: VersionFormProps) => {
         className="mt-10 max-w-96"
         onClick={() => setOpen(true)}
       >
-        create
+        {action}
       </Button>
     </>
   );

@@ -6,7 +6,7 @@ import axios from "axios";
 
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 
-import { ChampionColumn } from "./version-column";
+import { VersionColumn } from "./version-column";
 import { AlertModal } from "@/components/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,11 +18,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
 
-interface ChampionActionsProps {
-  data: ChampionColumn;
+interface VersionActionsProps {
+  data: VersionColumn;
 }
 
-export const ChampionActions = ({ data }: ChampionActionsProps) => {
+export const VersionActions = ({ data }: VersionActionsProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -32,12 +32,12 @@ export const ChampionActions = ({ data }: ChampionActionsProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/champions/${data.id}`);
+      await axios.delete(`/api/my-version/${data.id}`);
+      router.push(`/my-version`);
       router.refresh();
-      router.push(`/champions`);
       toast({
         variant: "success",
-        description: "Champion updated",
+        description: "Version deleted",
       });
     } catch (error) {
       toast({
@@ -69,7 +69,7 @@ export const ChampionActions = ({ data }: ChampionActionsProps) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => router.push(`/champions/${data.id}`)}
+            onClick={() => router.push(`/my-version/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" />
             Update

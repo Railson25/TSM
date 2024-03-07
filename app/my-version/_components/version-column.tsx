@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ChampionActions } from "./version-actions";
+import { VersionActions } from "./version-actions";
 
 export type VersionColumn = {
   id: string;
@@ -15,6 +15,6 @@ export const columns: ColumnDef<VersionColumn>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <ChampionActions data={row.original} />,
+    cell: ({ row }) => <VersionActions data={row.original} />,
   },
 ];

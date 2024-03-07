@@ -1,10 +1,11 @@
 import prismaDB from "@/lib/prismadb";
+import { checkRole } from "@/utils/roles";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request, params: { versionId: string }) {
   try {
-    const { userId, has } = auth();
+    const { userId } = auth();
     const body = await req.json();
 
     const { name } = body;
@@ -13,8 +14,8 @@ export async function POST(req: Request, params: { versionId: string }) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
-    if (!has({ permission: "admin" })) {
-      return Response.json({ error: "Forbidden" }, { status: 403 });
+    if (!checkRole("admin")) {
+      return { message: "Not Authorized" };
     }
 
     if (!name) {

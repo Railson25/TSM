@@ -1,5 +1,6 @@
 import prismaDB from "@/lib/prismadb";
-
+import { auth } from "@clerk/nextjs";
+import { checkRole } from "@/utils/roles";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -24,73 +25,76 @@ export async function GET(
   }
 }
 
-// export async function PATCH(
-//   req: Request,
-//   { params }: { params: { championId: string } }
-// ) {
-//   try {
-//     const { userId } = auth();
-//     const body = await req.json();
+export async function PATCH(
+  req: Request,
+  { params }: { params: { versionId: string } }
+) {
+  try {
+    const { userId } = auth();
+    const body = await req.json();
 
-//     const { name, imageURL } = body;
+    const { name } = body;
 
-//     if (!userId) {
-//       return new NextResponse("Unauthorized", { status: 401 });
-//     }
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
-//     if (!name) {
-//       return new NextResponse("Name is required", { status: 400 });
-//     }
+    if (!checkRole("admin")) {
+      return { message: "Not Authorized" };
+    }
 
-//     if (!imageURL) {
-//       return new NextResponse("Image URL is required", { status: 400 });
-//     }
+    if (!name) {
+      return new NextResponse("Name is required", { status: 400 });
+    }
 
-//     if (!params.championId) {
-//       return new NextResponse("Champion Id is required", { status: 400 });
-//     }
+    if (!params.versionId) {
+      return new NextResponse("Version Id is required", { status: 400 });
+    }
 
-//     const champion = await prismaDB.champion.updateMany({
-//       where: {
-//         id: params.championId,
-//       },
-//       data: {
-//         name,
-//         imageURL,
-//       },
-//     });
+    const version = await prismaDB.gameVersion.updateMany({
+      where: {
+        id: params.versionId,
+      },
+      data: {
+        name,
+      },
+    });
 
-//     return NextResponse.json(champion);
-//   } catch (error) {
-//     console.log("[CHAMPION_PATCH]", error);
-//     return new NextResponse("Internal error", { status: 500 });
-//   }
-// }
+    return NextResponse.json(version);
+  } catch (error) {
+    console.log("[VERSION_PATCH]", error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}
 
-// export async function DELETE(
-//   req: Request,
-//   { params }: { params: { championId: string } }
-// ) {
-//   try {
-//     const { userId } = auth();
+export async function DELETE(
+  req: Request,
+  { params }: { params: { versionId: string } }
+) {
+  try {
+    const { userId } = auth();
 
-//     if (!userId) {
-//       return new NextResponse("Unauthorized", { status: 401 });
-//     }
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
-//     if (!params.championId) {
-//       return new NextResponse("Champion Id is required", { status: 400 });
-//     }
+    if (!checkRole("admin")) {
+      return { message: "Not Authorized" };
+    }
 
-//     const champion = await prismaDB.champion.deleteMany({
-//       where: {
-//         id: params.championId,
-//       },
-//     });
+    if (!params.versionId) {
+      return new NextResponse("Version Id is required", { status: 400 });
+    }
 
-//     return NextResponse.json(champion);
-//   } catch (error) {
-//     console.log("[CHAMPION_DELETE]", error);
-//     return new NextResponse("Internal error", { status: 500 });
-//   }
-// }
+    const version = await prismaDB.gameVersion.deleteMany({
+      where: {
+        id: params.versionId,
+      },
+    });
+
+    return NextResponse.json(version);
+  } catch (error) {
+    console.log("[VERSION_DELETE]", error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}

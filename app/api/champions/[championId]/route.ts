@@ -1,5 +1,6 @@
 import prismaDB from "@/lib/prismadb";
-import prismadb from "@/lib/prismadb";
+import { checkRole } from "@/utils/roles";
+
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
@@ -30,7 +31,7 @@ export async function PATCH(
   { params }: { params: { championId: string } }
 ) {
   try {
-    const { userId, has } = auth();
+    const { userId } = auth();
     const body = await req.json();
 
     const { name, imageURL } = body;
@@ -38,8 +39,8 @@ export async function PATCH(
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    if (!has({ permission: "admin" })) {
-      return Response.json({ error: "Forbidden" }, { status: 403 });
+    if (!checkRole("admin")) {
+      return { message: "Not Authorized" };
     }
 
     if (!name) {
@@ -76,14 +77,14 @@ export async function DELETE(
   { params }: { params: { championId: string } }
 ) {
   try {
-    const { userId, has } = auth();
+    const { userId } = auth();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!has({ permission: "admin" })) {
-      return Response.json({ error: "Forbidden" }, { status: 403 });
+    if (!checkRole("admin")) {
+      return { message: "Not Authorized" };
     }
 
     if (!params.championId) {
