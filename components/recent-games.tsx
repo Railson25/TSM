@@ -8,14 +8,7 @@ import { Skeleton } from "./ui/skeleton";
 
 import React, { useState } from "react";
 import { Modal } from "./modal";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "./ui/table";
 
 import { RecentGameModal } from "./recent-game-modal";
 

@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { VersionColumn, columns } from "./version-column";
+import { Protect } from "@clerk/nextjs";
 
 interface VersionClientProps {
   data: VersionColumn[];

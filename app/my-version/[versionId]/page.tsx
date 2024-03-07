@@ -1,3 +1,5 @@
+import { checkRole } from "@/utils/roles";
+import { redirect } from "next/navigation";
 import { Header } from "@/components/header";
 import { VersionForm } from "./_components/version-form";
 import { AlertTriangle } from "lucide-react";
@@ -8,6 +10,10 @@ interface VersionProps {
 }
 
 const VersionPage = async ({ params }: VersionProps) => {
+  if (!checkRole("admin")) {
+    redirect("/");
+  }
+
   const version = await prismaDB.gameVersion.findUnique({
     where: {
       id: params.versionId,

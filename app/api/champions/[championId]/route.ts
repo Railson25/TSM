@@ -30,13 +30,16 @@ export async function PATCH(
   { params }: { params: { championId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const { userId, has } = auth();
     const body = await req.json();
 
     const { name, imageURL } = body;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
+    }
+    if (!has({ permission: "admin" })) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
     if (!name) {
@@ -73,10 +76,14 @@ export async function DELETE(
   { params }: { params: { championId: string } }
 ) {
   try {
-    const { userId } = auth();
+    const { userId, has } = auth();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    if (!has({ permission: "admin" })) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
     if (!params.championId) {

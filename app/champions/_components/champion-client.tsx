@@ -22,6 +22,7 @@ export const ChampionClient = ({ data }: ChampionClientProps) => {
           title="Champions"
           description="Manage champions to your table"
         />
+
         <Button onClick={() => router.push("/champions/new")}>
           <Plus className="mr-2 h-4 w-4" />
           Add new

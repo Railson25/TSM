@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request, params: { championId: string }) {
   try {
-    const { userId } = auth();
+    const { userId, has } = auth();
     const body = await req.json();
 
     const {
@@ -24,6 +24,9 @@ export async function POST(req: Request, params: { championId: string }) {
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
+    }
+    if (!has({ permission: "admin" })) {
+      return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
     if (!name) {

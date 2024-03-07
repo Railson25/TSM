@@ -99,8 +99,6 @@ export const LineChartCompareRandom = ({
     };
   });
 
-  console.log("aaaaaaaaa", averageDamageData);
-
   const months = [
     "Jan",
     "Feb",

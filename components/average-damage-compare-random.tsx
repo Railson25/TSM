@@ -26,11 +26,7 @@ export const AverageDamageCompareRandom = ({
     setSelectedChampion(champion);
   };
 
-  useEffect(() => {
-    console.log("aaaaaaaaaaaaaa", selectedChampion);
-  }, [selectedChampion]);
-
-  console.log(selectedRole);
+  useEffect(() => {}, [selectedChampion]);
 
   return (
     <div>
