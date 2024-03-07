@@ -115,10 +115,6 @@ export async function GET() {
       },
     });
 
-    // if (!gamesByUserId) {
-    //   return new NextResponse("Unauthorized", { status: 403 });
-    // }
-
     const games = await prismaDB.game.findMany({
       orderBy: {
         createdAt: "asc",

@@ -6,7 +6,7 @@ import axios from "axios";
 
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 
-import { ChampionColumn } from "./game-column";
+import { GameColumn } from "./game-column";
 import { AlertModal } from "@/components/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,11 +18,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
 
-interface ChampionActionsProps {
-  data: ChampionColumn;
+interface GameActionsProps {
+  data: GameColumn;
 }
 
-export const ChampionActions = ({ data }: ChampionActionsProps) => {
+export const GameActions = ({ data }: GameActionsProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -32,18 +32,17 @@ export const ChampionActions = ({ data }: ChampionActionsProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/champions/${data.id}`);
+      await axios.delete(`/api/games/${data.id}`);
+      router.push(`/games`);
       router.refresh();
-      router.push(`/champions`);
       toast({
         variant: "success",
-        description: "Champion updated",
+        description: "Game deleted",
       });
     } catch (error) {
       toast({
         variant: "destructive",
-        description:
-          "Make sure you removed all games using this champion first.!",
+        description: "Something went wrong!",
       });
     } finally {
       setLoading(false);
@@ -67,13 +66,7 @@ export const ChampionActions = ({ data }: ChampionActionsProps) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => router.push(`/champions/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            Update
-          </DropdownMenuItem>
+          <DropdownMenuLabel>Action</DropdownMenuLabel>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" />
             Delete

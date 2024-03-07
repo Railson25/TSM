@@ -2,7 +2,7 @@
 
 import { ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
-import { ChampionActions } from "./game-actions";
+import { GameActions } from "./game-actions";
 import { Button } from "@/components/ui/button";
 
 export type GameColumn = {
@@ -58,13 +58,9 @@ export const columns: ColumnDef<GameColumn>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "patch",
-  //   header: "Game Version",
-  // },
 
   {
     id: "actions",
-    cell: ({ row }) => <ChampionActions data={row.original} />,
+    cell: ({ row }) => <GameActions data={row.original} />,
   },
 ];
