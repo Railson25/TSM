@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export interface GameData {
   role: string;
@@ -19,13 +19,18 @@ export interface GameData {
   toppledTowers: number | null;
   troopScore: number | null;
   wardNumber: number | null;
-  isOpponent: Boolean | undefined;
+  isOpponent?: boolean | undefined;
+  gameDuration: string;
+  win: boolean;
+  patch: string;
+  id: string;
 }
 
 interface GameDataContextType {
   gameData: GameData[];
   addToGameData: (data: GameData) => void;
   clearGameData: () => void;
+  removeFromGameData: (id: string) => void;
 }
 
 const GameDataContext = createContext<GameDataContextType | undefined>(
@@ -45,6 +50,17 @@ export const GameDataProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [gameData, setGameData] = useState<GameData[]>([]);
 
+  useEffect(() => {
+    const savedData = localStorage.getItem("gameData");
+    if (savedData) {
+      setGameData(JSON.parse(savedData));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("gameData", JSON.stringify(gameData));
+  }, [gameData]);
+
   const addToGameData = (data: GameData) => {
     const isIdDuplicate = gameData.some(
       (game) => game.championId === data.championId
@@ -57,13 +73,19 @@ export const GameDataProvider: React.FC<{ children: React.ReactNode }> = ({
     setGameData([...gameData, data]);
   };
 
+  const removeFromGameData = (id: string) => {
+    setGameData((prevGameData) =>
+      prevGameData.filter((game) => game.id !== id)
+    );
+  };
+
   const clearGameData = () => {
     setGameData([]);
   };
 
   return (
     <GameDataContext.Provider
-      value={{ gameData, addToGameData, clearGameData }}
+      value={{ gameData, addToGameData, clearGameData, removeFromGameData }}
     >
       {children}
     </GameDataContext.Provider>

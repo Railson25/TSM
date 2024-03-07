@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import axios from "axios";
 
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { MoreHorizontal, Trash } from "lucide-react";
 
 import { GameColumn } from "./game-column";
 import { AlertModal } from "@/components/alert-modal";
@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
+import { GameData, useGameData } from "@/context/game-data-context";
 
 interface GameActionsProps {
   data: GameColumn;
@@ -25,20 +26,22 @@ interface GameActionsProps {
 export const GameActions = ({ data }: GameActionsProps) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { removeFromGameData, gameData } = useGameData();
 
-  const router = useRouter();
   const { toast } = useToast();
 
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/games/${data.id}`);
-      router.push(`/games`);
-      router.refresh();
-      toast({
-        variant: "success",
-        description: "Game deleted",
-      });
+      removeFromGameData(data.id);
+
+      const localStorageData = JSON.parse(
+        localStorage.getItem("gameData") || "[]"
+      );
+      const updatedLocalStorageData = localStorageData.filter(
+        (item: GameData) => item.id !== data.id
+      );
+      localStorage.setItem("gameData", JSON.stringify(updatedLocalStorageData));
     } catch (error) {
       toast({
         variant: "destructive",
