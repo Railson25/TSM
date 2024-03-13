@@ -8,10 +8,13 @@ const useGames = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/games", {
-          cache: "force-cache",
-          next: { tags: ["games"] },
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/games`,
+          {
+            cache: "force-cache",
+            next: { tags: ["games"] },
+          }
+        );
         const gamesData = await response.json();
         setGames(gamesData);
       } catch (error) {

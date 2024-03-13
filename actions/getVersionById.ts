@@ -2,7 +2,7 @@
 
 export const getVersionById = async (versionId: string) => {
   const response = await fetch(
-    `http://localhost:3000/api/my-version/${versionId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/my-version/${versionId}`,
     {
       cache: "force-cache",
       next: { tags: ["versionById"] },
