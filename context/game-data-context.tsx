@@ -73,9 +73,9 @@ export const GameDataProvider: React.FC<{ children: React.ReactNode }> = ({
     setGameData([...gameData, data]);
   };
 
-  const removeFromGameData = (id: string) => {
+  const removeFromGameData = (championId: string) => {
     setGameData((prevGameData) =>
-      prevGameData.filter((game) => game.id !== id)
+      prevGameData.filter((game) => game.championId !== championId)
     );
   };
 

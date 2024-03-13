@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { GameActions } from "../../_components/game-actions";
+import { GameTableActions } from "./game-table-actions";
 import { GameData } from "@/context/game-data-context";
 
 export const columns: ColumnDef<GameData>[] = [
@@ -20,6 +20,6 @@ export const columns: ColumnDef<GameData>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => <GameActions data={row.original} />,
+    cell: ({ row }) => <GameTableActions data={row.original} />,
   },
 ];

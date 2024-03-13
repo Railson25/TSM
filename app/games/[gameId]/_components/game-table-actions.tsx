@@ -2,12 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import axios from "axios";
 
 import { MoreHorizontal, Trash } from "lucide-react";
 
-import { GameColumn } from "./game-column";
-import { AlertModal } from "@/components/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,42 +13,31 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useToast } from "@/components/ui/use-toast";
 
-interface GameActionsProps {
-  data: GameColumn;
+import { GameData, useGameData } from "@/context/game-data-context";
+
+interface GameTableActionsProps {
+  data: GameData;
 }
 
-export const GameActions = ({ data }: GameActionsProps) => {
+export const GameTableActions = ({ data }: GameTableActionsProps) => {
+  const { removeFromGameData } = useGameData();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  const { toast } = useToast();
+  console.log(data);
 
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/games/${data.id}`);
-      router.push(`/games`);
+      console.log("aaahuabvaghj");
+      removeFromGameData(data.championId);
+
       router.refresh();
-      toast({
-        variant: "success",
-        description: "Game deleted",
-      });
     } catch (error: any) {
-      if (error.response.status === 403) {
-        toast({
-          variant: "destructive",
-          description: "Only the person who created this game can delete it!!",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          description: "Something went wrong!",
-        });
-      }
+      console.log(error);
     } finally {
       setLoading(false);
       setOpen(false);
@@ -60,12 +46,6 @@ export const GameActions = ({ data }: GameActionsProps) => {
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-        loading={loading}
-      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button>
@@ -75,7 +55,7 @@ export const GameActions = ({ data }: GameActionsProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Action</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
+          <DropdownMenuItem onClick={onDelete}>
             <Trash className="mr-2 h-4 w-4" />
             Delete
           </DropdownMenuItem>
