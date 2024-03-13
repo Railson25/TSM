@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
+import { useRole } from "@/context/role-context";
 
 interface VersionActionsProps {
   data: VersionColumn;
@@ -28,6 +29,7 @@ export const VersionActions = ({ data }: VersionActionsProps) => {
 
   const router = useRouter();
   const { toast } = useToast();
+  const role = useRole();
 
   const onDelete = async () => {
     try {
@@ -40,10 +42,15 @@ export const VersionActions = ({ data }: VersionActionsProps) => {
         description: "Version deleted",
       });
     } catch (error) {
+      if (role && role.role === "admin") {
+        toast({
+          variant: "destructive",
+          description: "Something went wrong!",
+        });
+      }
       toast({
         variant: "destructive",
-        description:
-          "Make sure you removed all games using this champion first.!",
+        description: "Not authorized.",
       });
     } finally {
       setLoading(false);
@@ -68,12 +75,14 @@ export const VersionActions = ({ data }: VersionActionsProps) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => router.push(`/my-version/${data.id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" />
-            Update
-          </DropdownMenuItem>
+          {role.role === "admin" && (
+            <DropdownMenuItem
+              onClick={() => router.push(`/my-version/${data.id}`)}
+            >
+              <Edit className="mr-2 h-4 w-4" />
+              Update
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" />
             Delete

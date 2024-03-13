@@ -6,3 +6,10 @@ export const checkRole = (role: Roles) => {
 
   return sessionClaims?.metadata.role === role;
 };
+
+export function getRole(): string | undefined {
+  const { sessionClaims } = auth();
+  const role = sessionClaims?.metadata?.role;
+
+  return role;
+}

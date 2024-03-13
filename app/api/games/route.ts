@@ -94,6 +94,7 @@ export async function POST(req: Request) {
         defaultVersionId,
         totalKills,
         totalDeath,
+        userId: userId,
       },
     });
 

@@ -41,6 +41,20 @@ export async function DELETE(
       return new NextResponse("Champion Id is required", { status: 400 });
     }
 
+    const gameId = await prismaDB.game.findFirst({
+      where: {
+        id: params.gameId,
+      },
+    });
+
+    if (!gameId) {
+      return new NextResponse("Game not found", { status: 404 });
+    }
+
+    if (gameId.userId !== userId) {
+      return new NextResponse("Unauthorized", { status: 403 });
+    }
+
     const game = await prismaDB.game.deleteMany({
       where: {
         id: params.gameId,

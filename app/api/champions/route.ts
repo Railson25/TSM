@@ -27,8 +27,9 @@ export async function POST(req: Request, params: { championId: string }) {
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
     }
+
     if (!checkRole("admin")) {
-      return { message: "Not Authorized" };
+      return new NextResponse("Not authorized", { status: 401 });
     }
 
     if (!name) {

@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ChampionColumn, columns } from "./champion-column";
+import { useRole } from "@/context/role-context";
 
 interface ChampionClientProps {
   data: ChampionColumn[];
@@ -14,6 +15,8 @@ interface ChampionClientProps {
 
 export const ChampionClient = ({ data }: ChampionClientProps) => {
   const router = useRouter();
+
+  const role = useRole();
 
   return (
     <>
@@ -23,10 +26,12 @@ export const ChampionClient = ({ data }: ChampionClientProps) => {
           description="Manage champions to your table"
         />
 
-        <Button onClick={() => router.push("/champions/new")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add new
-        </Button>
+        {role.role === "admin" && (
+          <Button onClick={() => router.push("/champions/new")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add new
+          </Button>
+        )}
       </div>
       <Separator />
       <DataTable columns={columns} searchKey="name" data={data} />

@@ -8,7 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { VersionColumn, columns } from "./version-column";
-import { Protect } from "@clerk/nextjs";
+
+import { useRole } from "@/context/role-context";
 
 interface VersionClientProps {
   data: VersionColumn[];
@@ -16,18 +17,19 @@ interface VersionClientProps {
 
 export const VersionClient = ({ data }: VersionClientProps) => {
   const router = useRouter();
+  const role = useRole();
 
   return (
     <>
       <div className="flex items-center justify-between">
         <Header title="Versions" description="Manage version to your game" />
 
-        {/* <Protect permission="admin"> */}
-        <Button onClick={() => router.push("/my-version/new")}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add new
-        </Button>
-        {/* </Protect> */}
+        {role.role === "admin" && (
+          <Button onClick={() => router.push("/my-version/new")}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add new
+          </Button>
+        )}
       </div>
       <Separator />
       <DataTable columns={columns} data={data} searchKey="name" />

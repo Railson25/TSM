@@ -41,11 +41,18 @@ export const GameActions = ({ data }: GameActionsProps) => {
         variant: "success",
         description: "Game deleted",
       });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        description: "Something went wrong!",
-      });
+    } catch (error: any) {
+      if (error.response.status === 403) {
+        toast({
+          variant: "destructive",
+          description: "Only the person who created this game can delete it!!",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          description: "Something went wrong!",
+        });
+      }
     } finally {
       setLoading(false);
       setOpen(false);

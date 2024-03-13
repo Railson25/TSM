@@ -52,6 +52,7 @@ model Game {
   updatedAt    DateTime     @updatedAt
   champions GameChampion[] 
 
+  userId String
   gameDuration String
   totalKills Int
   totalDeath Int

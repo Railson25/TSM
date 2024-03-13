@@ -8,6 +8,8 @@ import { Container } from "@/components/conatiner";
 import { Toaster } from "@/components/ui/toaster";
 import { Heading } from "@/components/heading";
 import { GameDataProvider } from "@/context/game-data-context";
+import { getRole } from "@/utils/roles";
+import { RoleProvider } from "@/context/role-context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,30 +32,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { userId } = auth();
+  const initialRole = getRole();
+
   return (
     <ClerkProvider>
       <GameDataProvider>
-        <html lang="en" suppressHydrationWarning>
-          <body className={inter.className}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Toaster />
-              <main className=" flex flex-col min-h-screen bg-secondary">
-                <Navbar />
-                <section className="flex-grow">
-                  <Container>
-                    {children}
-                    {!userId && <Heading />}
-                  </Container>
-                </section>
-              </main>
-            </ThemeProvider>
-          </body>
-        </html>
+        <RoleProvider initialRole={initialRole}>
+          <html lang="en" suppressHydrationWarning>
+            <body className={inter.className}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Toaster />
+                <main className=" flex flex-col min-h-screen bg-secondary">
+                  <Navbar />
+                  <section className="flex-grow">
+                    <Container>
+                      {children}
+                      {!userId && <Heading />}
+                    </Container>
+                  </section>
+                </main>
+              </ThemeProvider>
+            </body>
+          </html>
+        </RoleProvider>
       </GameDataProvider>
     </ClerkProvider>
   );

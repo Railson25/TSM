@@ -40,7 +40,7 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 401 });
     }
     if (!checkRole("admin")) {
-      return { message: "Not Authorized" };
+      return new NextResponse("Not authorized", { status: 401 });
     }
 
     if (!name) {
@@ -84,7 +84,7 @@ export async function DELETE(
     }
 
     if (!checkRole("admin")) {
-      return { message: "Not Authorized" };
+      return new NextResponse("Not authorized", { status: 401 });
     }
 
     if (!params.championId) {

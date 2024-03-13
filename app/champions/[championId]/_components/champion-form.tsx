@@ -119,7 +119,7 @@ export const ChampionForm = ({ initialData }: ChampionFormProps) => {
         });
       }
       router.push(`/champions`);
-      // router.refresh();
+      router.refresh();
     } catch (error) {
       toast({
         variant: "destructive",
