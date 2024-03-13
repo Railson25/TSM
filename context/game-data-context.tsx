@@ -20,10 +20,10 @@ export interface GameData {
   troopScore: number | null;
   wardNumber: number | null;
   isOpponent?: boolean | undefined;
-  gameDuration: string;
-  win: boolean;
-  patch: string;
-  id: string;
+  gameDuration?: string;
+  win?: boolean;
+  patch?: string;
+  id?: string;
 }
 
 interface GameDataContextType {
