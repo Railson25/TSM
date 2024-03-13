@@ -48,6 +48,9 @@ export async function POST(req: Request, params: { versionId: string }) {
     });
 
     revalidateTag("versions");
+    revalidateTag("games");
+    revalidateTag("championInGame");
+    revalidateTag("championById");
 
     return NextResponse.json(newVersion);
   } catch (error) {

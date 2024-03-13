@@ -98,6 +98,7 @@ export async function POST(req: Request) {
       },
     });
 
+    revalidateTag("versions");
     revalidateTag("games");
     revalidateTag("championInGame");
     revalidateTag("championById");

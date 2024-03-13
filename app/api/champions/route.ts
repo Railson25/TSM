@@ -79,6 +79,10 @@ export async function POST(req: Request, params: { championId: string }) {
     });
 
     revalidateTag("champions");
+    revalidateTag("versions");
+    revalidateTag("games");
+    revalidateTag("championInGame");
+    revalidateTag("championById");
     return NextResponse.json(champion);
   } catch (error) {
     console.log("CHAMPIONS_POST", error);
