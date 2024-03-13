@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton, useAuth } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/nextjs";
 import { Container } from "./conatiner";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -37,16 +37,14 @@ export const Navbar = () => {
             <UserButton afterSignOutUrl="/" />
             {!userId && (
               <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => router.push("/sign-in")}
-                >
-                  Sign in
-                </Button>
-                <Button size="sm" onClick={() => router.push("/sign-up")}>
-                  Sign up
-                </Button>
+                <SignInButton mode="modal">
+                  <Button variant="outline" size="sm">
+                    Sign in
+                  </Button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <Button size="sm">Sign up</Button>
+                </SignUpButton>
               </>
             )}
           </div>

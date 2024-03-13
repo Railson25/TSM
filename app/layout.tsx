@@ -10,6 +10,7 @@ import { Heading } from "@/components/heading";
 import { GameDataProvider } from "@/context/game-data-context";
 import { getRole } from "@/utils/roles";
 import { RoleProvider } from "@/context/role-context";
+import { Team } from "@/components/team";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,12 +48,23 @@ export default function RootLayout({
                 disableTransitionOnChange
               >
                 <Toaster />
-                <main className=" flex flex-col min-h-screen bg-secondary">
+                <main className=" flex flex-col  bg-secondary">
                   <Navbar />
-                  <section className="flex-grow">
+                  <section className="min-h-screen">
                     <Container>
-                      {children}
-                      {!userId && <Heading />}
+                      {userId === null ? (
+                        <>
+                          <Heading />
+                          <Team />
+                          <p className="italic text-sm text-center">
+                            Developed by{" "}
+                            <span className="font-bold">Railson Santiago</span>.
+                            All rights reserved ©
+                          </p>
+                        </>
+                      ) : (
+                        <>{children}</>
+                      )}
                     </Container>
                   </section>
                 </main>
