@@ -1,6 +1,7 @@
 import prismaDB from "@/lib/prismadb";
 import { checkRole } from "@/utils/roles";
 import { auth } from "@clerk/nextjs";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request, params: { championId: string }) {
@@ -76,6 +77,7 @@ export async function POST(req: Request, params: { championId: string }) {
       },
     });
 
+    revalidateTag("champions");
     return NextResponse.json(champion);
   } catch (error) {
     console.log("CHAMPIONS_POST", error);

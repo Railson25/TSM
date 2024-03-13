@@ -1,6 +1,7 @@
 import prismaDB from "@/lib/prismadb";
 
 import { auth } from "@clerk/nextjs";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -45,6 +46,10 @@ export async function DELETE(
         id: params.gameId,
       },
     });
+
+    revalidateTag("games");
+    revalidateTag("championInGame");
+    revalidateTag("championById");
 
     return NextResponse.json(game);
   } catch (error) {

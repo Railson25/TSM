@@ -2,6 +2,7 @@ import { ChampionFormValues } from "@/app/games/[gameId]/_components/champion-fo
 import prismaDB from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { ChampionRole } from "@prisma/client";
+import { revalidateTag } from "next/cache";
 
 import { NextResponse } from "next/server";
 
@@ -95,6 +96,10 @@ export async function POST(req: Request) {
         totalDeath,
       },
     });
+
+    revalidateTag("games");
+    revalidateTag("championInGame");
+    revalidateTag("championById");
 
     return NextResponse.json(game);
   } catch (error) {

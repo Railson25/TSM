@@ -5,7 +5,7 @@ export const getVersionById = async (versionId: string) => {
     `http://localhost:3000/api/my-version/${versionId}`,
     {
       cache: "force-cache",
-      next: { tags: ["versions"] },
+      next: { tags: ["versionById"] },
     }
   );
 

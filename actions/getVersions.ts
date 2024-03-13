@@ -2,7 +2,7 @@
 
 export const getVersions = async () => {
   const response = await fetch("http://localhost:3000/api/my-version", {
-    next: { tags: ["versions"], revalidate: 7800 },
+    next: { tags: ["versions"] },
   });
 
   const versions = await response.json();

@@ -2,6 +2,7 @@ import prismaDB from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import { checkRole } from "@/utils/roles";
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 
 export async function GET(
   req: Request,
@@ -60,6 +61,8 @@ export async function PATCH(
       },
     });
 
+    revalidateTag("versions");
+
     return NextResponse.json(version);
   } catch (error) {
     console.log("[VERSION_PATCH]", error);
@@ -91,7 +94,7 @@ export async function DELETE(
         id: params.versionId,
       },
     });
-
+    revalidateTag("versions");
     return NextResponse.json(version);
   } catch (error) {
     console.log("[VERSION_DELETE]", error);
