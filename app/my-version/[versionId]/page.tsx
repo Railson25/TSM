@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { Header } from "@/components/header";
 import { VersionForm } from "./_components/version-form";
 import { AlertTriangle } from "lucide-react";
-import prismaDB from "@/lib/prismadb";
+
+import { getVersionById } from "@/actions/getVersionById";
 
 interface VersionProps {
   params: { versionId: string };
@@ -14,11 +15,7 @@ const VersionPage = async ({ params }: VersionProps) => {
     redirect("/");
   }
 
-  const version = await prismaDB.gameVersion.findUnique({
-    where: {
-      id: params.versionId,
-    },
-  });
+  const version = await getVersionById(params.versionId);
 
   return (
     <div className="flex w-full max-md:flex-col-reverse gap-x-8 px-3 pt-7">

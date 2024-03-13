@@ -104,17 +104,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET() {
-  const { userId } = auth();
-  if (!userId) {
-    return new NextResponse("Unauthenticated", { status: 403 });
-  }
   try {
-    const gamesByUserId = await prismaDB.game.findFirst({
-      where: {
-        createdByUserId: userId,
-      },
-    });
-
     const games = await prismaDB.game.findMany({
       orderBy: {
         createdAt: "asc",

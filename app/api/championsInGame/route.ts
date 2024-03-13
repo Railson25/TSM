@@ -1,14 +1,8 @@
 import prismaDB from "@/lib/prismadb";
-import { auth } from "@clerk/nextjs";
+
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const { userId } = auth();
-
-  if (!userId) {
-    return new NextResponse("Unauthenticated", { status: 403 });
-  }
-
   try {
     const championsInGame = await prismaDB.gameChampion.findMany({
       orderBy: {

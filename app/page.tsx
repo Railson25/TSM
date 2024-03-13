@@ -1,33 +1,22 @@
+import { getChampionInGames } from "@/actions/getChampionInGame";
+import { getChampions } from "@/actions/getChampions";
+import { getGames } from "@/actions/getGames";
 import { AverageDamage } from "@/components/average-damage";
 import { AverageDamageCompareRandom } from "@/components/average-damage-compare-random";
 import { BarChart } from "@/components/bar-chart";
-import { DamageSelect } from "@/components/damage-select";
+
 import { Header } from "@/components/header";
 import { HomeCard } from "@/components/home-card";
 import { HorizontalChart } from "@/components/horizontal-chart";
-import { LineChart } from "@/components/line-chart";
+
 import { RecentGames } from "@/components/recent-games";
 import { Team } from "@/components/team";
-import prismaDB from "@/lib/prismadb";
+import { Champion, Game, GameChampion } from "@prisma/client";
 
 export default async function Home() {
-  const games = await prismaDB.game.findMany({
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
-
-  const championsInGame = await prismaDB.gameChampion.findMany({
-    orderBy: {
-      damage: "asc",
-    },
-  });
-
-  const champions = await prismaDB.champion.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const games: Game[] = await getGames();
+  const champions: Champion[] = await getChampions();
+  const championsInGame: GameChampion[] = await getChampionInGames();
 
   return (
     <main className="min-h-screen ">

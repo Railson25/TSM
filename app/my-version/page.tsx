@@ -1,15 +1,12 @@
-import prismaDB from "@/lib/prismadb";
 import { VersionClient } from "./_components/version-client";
 import { VersionColumn } from "./_components/version-column";
+import { getVersions } from "@/actions/getVersions";
+import { gameVersion } from "@prisma/client";
 
 const VersionsPage = async () => {
-  const champions = await prismaDB.gameVersion.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const versions: gameVersion[] = await getVersions();
 
-  const formattedVersions: VersionColumn[] = champions.map((item) => ({
+  const formattedVersions: VersionColumn[] = versions.map((item) => ({
     id: item.id,
     name: item.name,
   }));

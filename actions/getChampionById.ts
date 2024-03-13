@@ -1,17 +1,15 @@
-import prismaDB from "@/lib/prismadb";
+"use server";
 
 export const getChampionById = async (championId: string) => {
-  try {
-    const champion = await prismaDB.champion.findUnique({
-      where: {
-        id: championId,
-      },
-    });
+  const response = await fetch(
+    `http://localhost:3000/api/champions/${championId} `,
+    {
+      cache: "force-cache",
+      next: { tags: ["championById"] },
+    }
+  );
 
-    if (!champion) return null;
+  const games = await response.json();
 
-    return champion;
-  } catch (error: any) {
-    throw new Error(error);
-  }
+  return games;
 };

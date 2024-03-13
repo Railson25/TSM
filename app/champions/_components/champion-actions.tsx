@@ -37,7 +37,7 @@ export const ChampionActions = ({ data }: ChampionActionsProps) => {
       router.push(`/champions`);
       toast({
         variant: "success",
-        description: "Champion updated",
+        description: "Champion deleted",
       });
     } catch (error) {
       toast({

@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { GameChampion } from "@prisma/client";
 
-const useChampionsById = (gameId: string) => {
+export const useChampionsById = (gameId: string) => {
   const [champions, setChampions] = useState<GameChampion[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/championsInGame/${gameId}`);
+        const response = await fetch(`/api/championsInGame/${gameId}`, {
+          cache: "force-cache",
+          next: { tags: ["championById"] },
+        });
         const championsData = await response.json();
         setChampions(championsData);
       } catch (error) {
@@ -20,15 +23,16 @@ const useChampionsById = (gameId: string) => {
   return champions;
 };
 
-export default useChampionsById;
-
 export const useChampionsInGames = () => {
   const [champions, setChampions] = useState<GameChampion[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/api/championsInGame`);
+        const response = await fetch(`/api/championsInGame`, {
+          cache: "force-cache",
+          next: { tags: ["championInGame"] },
+        });
         const championsData = await response.json();
         setChampions(championsData);
       } catch (error) {

@@ -51,7 +51,6 @@ export const ChampionPieChart = ({
     })
     .slice(0, 6);
 
-  console.log("TopChampions:", topChampions);
   const mostPlayedChampionId = topChampions[0];
   const mostPlayedChampion = champions.find(
     (champion) => champion.id === mostPlayedChampionId

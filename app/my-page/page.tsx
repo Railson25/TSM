@@ -1,26 +1,14 @@
+import { getChampionInGames } from "@/actions/getChampionInGame";
+import { getChampions } from "@/actions/getChampions";
+import { getGames } from "@/actions/getGames";
 import { ChampionPieChart } from "@/components/champions-pie-chart";
 import { Header } from "@/components/header";
-import prismaDB from "@/lib/prismadb";
-import Image from "next/image";
+import { Champion, Game, GameChampion } from "@prisma/client";
 
 const MyPage = async () => {
-  const games = await prismaDB.game.findMany({
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
-
-  const championsInGame = await prismaDB.gameChampion.findMany({
-    orderBy: {
-      damage: "asc",
-    },
-  });
-
-  const champions = await prismaDB.champion.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const games: Game[] = await getGames();
+  const championsInGame: GameChampion[] = await getChampionInGames();
+  const champions: Champion[] = await getChampions();
 
   return (
     <div className="pt-10">

@@ -1,11 +1,10 @@
 "use client";
 
-import useChampionsById from "@/hook/useChampionsById";
+import { useChampionsById } from "@/hook/useChampionsById";
 import useGames from "@/hook/useGames";
 import { Game } from "@prisma/client";
-import { useState } from "react";
+
 import { TableCell, TableRow } from "./ui/table";
-import { toMinutes } from "@/lib/utils";
 
 interface RecentGameModalProps {
   selectedGameId: string;

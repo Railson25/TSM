@@ -1,24 +1,19 @@
 import prismaDB from "@/lib/prismadb";
 import { GameClient } from "./_components/game-client";
 import { GameColumn } from "./_components/game-column";
+import { Game, gameVersion } from "@prisma/client";
+import { getGames } from "@/actions/getGames";
+import { getVersions } from "@/actions/getVersions";
 
 const Games = async () => {
-  const games = await prismaDB.game.findMany({
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
-
-  const versions = await prismaDB.gameVersion.findMany({
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+  const games: Game[] = await getGames();
+  const versions: gameVersion[] = await getVersions();
 
   const formattedGames: GameColumn[] = games.map((item) => {
     const version = versions.find(
       (version) => version.id === item.defaultVersionId
     );
+
     const patch = version ? version.name : "Unknown";
 
     return {

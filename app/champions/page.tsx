@@ -1,13 +1,10 @@
-import prismaDB from "@/lib/prismadb";
 import { ChampionClient } from "./_components/champion-client";
 import { ChampionColumn } from "./_components/champion-column";
+import { getChampions } from "@/actions/getChampions";
+import { Champion } from "@prisma/client";
 
 const Champions = async () => {
-  const champions = await prismaDB.champion.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const champions: Champion[] = await getChampions();
 
   const formattedChampions: ChampionColumn[] = champions.map((item) => ({
     id: item.id,
