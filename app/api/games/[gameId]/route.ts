@@ -61,6 +61,8 @@ export async function DELETE(
       },
     });
 
+    revalidateTag("champions");
+    revalidateTag("versions");
     revalidateTag("games");
     revalidateTag("championInGame");
     revalidateTag("championById");

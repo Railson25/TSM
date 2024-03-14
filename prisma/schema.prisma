@@ -87,7 +87,7 @@ model GameChampion{
 
   role ChampionRole
   championId String
-  champion Champion @relation(fields: [championId], references: [id])
+  champion Champion @relation(fields: [championId], references: [id], onDelete: Cascade)
   gameId String
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
   @@unique([gameId, championId])

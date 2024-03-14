@@ -61,7 +61,11 @@ export async function PATCH(
       },
     });
 
+    revalidateTag("champions");
     revalidateTag("versions");
+    revalidateTag("games");
+    revalidateTag("championInGame");
+    revalidateTag("championById");
 
     return NextResponse.json(version);
   } catch (error) {
@@ -94,7 +98,11 @@ export async function DELETE(
         id: params.versionId,
       },
     });
+    revalidateTag("champions");
     revalidateTag("versions");
+    revalidateTag("games");
+    revalidateTag("championInGame");
+    revalidateTag("championById");
     return NextResponse.json(version);
   } catch (error) {
     console.log("[VERSION_DELETE]", error);

@@ -35,12 +35,13 @@ export const ChampionActions = ({ data }: ChampionActionsProps) => {
     try {
       setLoading(true);
       await axios.delete(`/api/champions/${data.id}`);
-      router.refresh();
       router.push(`/champions`);
       toast({
         variant: "success",
         description: "Champion deleted",
       });
+      router.refresh();
+      window.location.reload();
     } catch (error) {
       if (role && role.role === "admin") {
         toast({

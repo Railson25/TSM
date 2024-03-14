@@ -2,6 +2,7 @@ import prismaDB from "@/lib/prismadb";
 import { checkRole } from "@/utils/roles";
 
 import { auth } from "@clerk/nextjs";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -64,7 +65,11 @@ export async function PATCH(
         imageURL,
       },
     });
-
+    revalidateTag("champions");
+    revalidateTag("versions");
+    revalidateTag("games");
+    revalidateTag("championInGame");
+    revalidateTag("championById");
     return NextResponse.json(champion);
   } catch (error) {
     console.log("[CHAMPION_PATCH]", error);
@@ -96,6 +101,12 @@ export async function DELETE(
         id: params.championId,
       },
     });
+
+    revalidateTag("champions");
+    revalidateTag("versions");
+    revalidateTag("games");
+    revalidateTag("championInGame");
+    revalidateTag("championById");
 
     return NextResponse.json(champion);
   } catch (error) {

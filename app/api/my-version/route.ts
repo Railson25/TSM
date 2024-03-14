@@ -47,6 +47,7 @@ export async function POST(req: Request, params: { versionId: string }) {
       },
     });
 
+    revalidateTag("champions");
     revalidateTag("versions");
     revalidateTag("games");
     revalidateTag("championInGame");

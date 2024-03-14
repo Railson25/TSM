@@ -229,7 +229,7 @@ export const GameForm = () => {
             )}
           />
           <div className="flex w-full justify-center">
-            <Button variant="premium" type="submit">
+            <Button variant="premium" type="submit" disabled={loading}>
               Create a game
             </Button>
           </div>
