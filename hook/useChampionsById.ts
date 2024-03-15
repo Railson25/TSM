@@ -9,7 +9,7 @@ export const useChampionsById = (gameId: string) => {
       try {
         const response = await fetch(`/api/championsInGame/${gameId}`, {
           cache: "force-cache",
-          next: { tags: ["championInGame"] },
+          next: { tags: ["championById"] },
         });
         const championsData = await response.json();
         setChampions(championsData);
