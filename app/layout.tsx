@@ -11,6 +11,7 @@ import { GameDataProvider } from "@/context/game-data-context";
 import { getRole } from "@/utils/roles";
 import { RoleProvider } from "@/context/role-context";
 import { Team } from "@/components/team";
+import { ModalProvider } from "@/providers/modal-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,7 @@ export default function RootLayout({
         <RoleProvider initialRole={initialRole}>
           <html lang="en" suppressHydrationWarning>
             <body className={inter.className}>
+              <ModalProvider />
               <ThemeProvider
                 attribute="class"
                 defaultTheme="system"

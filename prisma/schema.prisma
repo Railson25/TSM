@@ -10,6 +10,19 @@ datasource db {
 }
 
 
+model Team {
+  id String @id @default(cuid())
+  name String
+  userId String
+
+  champions Champion[]
+  gameVersion gameVersion[]
+  games Game[]
+  gameChampion GameChampion[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum ChampionRole{
   SUPPORT
   ADC
@@ -33,10 +46,12 @@ model Champion {
   attackSpeed String
   moveSpeed String
 
+  games GameChampion[]
   roles Role[] @relation("ChampionRole")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  games GameChampion[]
+  teamId String
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }
 
 model Role {
@@ -63,6 +78,9 @@ model Game {
 
   defaultVersionId String?
   defaultVersion gameVersion? @relation(fields: [defaultVersionId], references: [id], onDelete: Cascade)
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
 }
 
 model GameChampion{
@@ -90,6 +108,8 @@ model GameChampion{
   champion Champion @relation(fields: [championId], references: [id], onDelete: Cascade)
   gameId String
   game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
   @@unique([gameId, championId])
   @@index([gameId])
 }
@@ -102,4 +122,7 @@ model gameVersion {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   games Game[]
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
 }
+
